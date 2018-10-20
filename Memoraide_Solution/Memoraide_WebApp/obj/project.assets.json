@@ -5452,7 +5452,7 @@
       ]
     },
     "Microsoft.AspNetCore.Razor.Design/2.1.1": {
-      "sha512": "BOK5fckW9v7xWjpEI6bPGwkjw10OPVASZcAa8HoWJo/0Mmg4Azddj92v8noU+YgvD/6zNZ9o/RiRXXKxk5rYwQ==",
+      "sha512": "f8PKGcxiezL1RVqmnmrazj24Mj4KCTSXqwdotl7Lc+82h8iLV7ItxEIShTJakG7M9iw0ZuCocM0J/IhYesdQrg==",
       "type": "package",
       "path": "microsoft.aspnetcore.razor.design/2.1.1",
       "files": [
@@ -12218,23 +12218,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Wertville\\.nuget\\packages\\": {},
+    "C:\\Users\\Daniel\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\School\\Projects\\Memoraide_Solution\\Memoraide_WebApp\\Memoraide_WebApp.csproj",
+      "projectUniqueName": "C:\\Users\\Daniel\\Desktop\\Term 6\\Projects\\Memoraide\\Memoraide_Repo\\Memoraide_Solution\\Memoraide_WebApp\\Memoraide_WebApp.csproj",
       "projectName": "Memoraide_WebApp",
-      "projectPath": "D:\\School\\Projects\\Memoraide_Solution\\Memoraide_WebApp\\Memoraide_WebApp.csproj",
-      "packagesPath": "C:\\Users\\Wertville\\.nuget\\packages\\",
-      "outputPath": "D:\\School\\Projects\\Memoraide_Solution\\Memoraide_WebApp\\obj\\",
+      "projectPath": "C:\\Users\\Daniel\\Desktop\\Term 6\\Projects\\Memoraide\\Memoraide_Repo\\Memoraide_Solution\\Memoraide_WebApp\\Memoraide_WebApp.csproj",
+      "packagesPath": "C:\\Users\\Daniel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Daniel\\Desktop\\Term 6\\Projects\\Memoraide\\Memoraide_Repo\\Memoraide_Solution\\Memoraide_WebApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Wertville\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
