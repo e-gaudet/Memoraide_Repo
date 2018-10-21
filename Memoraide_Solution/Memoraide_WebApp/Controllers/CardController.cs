@@ -21,12 +21,26 @@ namespace Memoraide_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("CardFront,CardBack")] CardViewModel model)
+        public IActionResult Create([Bind("CardFront,CardBack,CardTags")] CardViewModel model)
         {
             if (ModelState.IsValid)
+            {
+                TempData["message"] = "Successfully added " + model.CardBack + " to " + "tempdeckname";
                 return RedirectToAction("Create");
-            else 
+            }
+            else
                 return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ViewCard(int id)
+        {
+            //TODO: CALL TO API HERE
+            CardViewModel model = new CardViewModel();
+            model.CardFront = "This is a test";
+            model.CardBack = "This is a test";
+            model.CardTags = "Test, test";
+            return View(model);
         }
     }
 }

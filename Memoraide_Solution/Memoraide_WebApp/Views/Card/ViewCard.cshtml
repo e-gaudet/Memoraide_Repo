@@ -1,0 +1,24 @@
+﻿@model CardViewModel
+@{
+    ViewData["Title"] = "View Card";
+}
+
+@if(TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>View Card</h2>
+
+
+<div class="form-horizontal">
+    <label asp-for="CardFront"></label>:<br />
+    <div>@Model.CardFront</div><br />
+    <label asp-for="CardBack"></label>:<br />
+    <div>@Model.CardBack</div><br />
+    <label asp-for="CardTags"></label>: <div>@Model.CardTags</div><br/>
+    <span asp-validation-for="CardTags"></span>
+    <button type="button">Edit</button>
+</div>

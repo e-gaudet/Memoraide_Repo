@@ -3,17 +3,25 @@
     ViewData["Title"] = "Create";
 }
 
+@if(TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
 <h2>Create</h2>
 
 <form asp-controller="Card" asp-action="Create" method="post">
     <div class="form-horizontal">
-        <div asp-validation-summary="All"></div>
         <label asp-for="CardFront"></label>:<br />
         <textarea asp-for="CardFront"></textarea><br />
         <span asp-validation-for="CardFront"></span><br />
         <label asp-for="CardBack"></label>:<br />
         <textarea asp-for="CardBack"></textarea><br />
         <span asp-validation-for="CardBack"></span><br />
-        <button type="submit">Add Card</button>
+        <label asp-for="CardTags"></label>: <input asp-for="CardTags"/><br/>
+        <span asp-validation-for="CardTags"></span>
+        <button type="submit">Add Card</button><button type="reset" onclick="return confirm('Clear card?');">Clear Card</button>
     </div>
 </form>

@@ -19,5 +19,26 @@ namespace Memoraide_WebApp.Models
         [Display(Name = "Card Back")]
         [MaxLength(1024)]
         public string CardBack { get; set; }
+
+        [Display(Name = "Tags")]
+        public string CardTags {
+            get {
+                if (_cardTags != null)
+                    return String.Join(", ", _cardTags);
+                else
+                    return "";
+            }
+
+            set {
+                if (value != null)
+                {
+                    _cardTags = new List<string>(value.Split(","));
+                    _cardTags = _cardTags.Select(i => i.Trim()).ToList();
+                }
+            }
+        }
+
+
+        private List<string> _cardTags;
     }
 }
