@@ -1,18 +1,19 @@
-﻿
+﻿@model CardViewModel
 @{
     ViewData["Title"] = "Create";
 }
 
 <h2>Create</h2>
 
-<form method="post">
-    Card Front
-    <br/>
-    <textarea></textarea>
-    <br />
-    Card back
-    <br />
-    <textarea></textarea>
-    <br/>
-    <button type="submit">Add Card</button>
+<form asp-controller="Card" asp-action="Create" method="post">
+    <div class="form-horizontal">
+        <div asp-validation-summary="All"></div>
+        <label asp-for="CardFront"></label>:<br />
+        <textarea asp-for="CardFront"></textarea><br />
+        <span asp-validation-for="CardFront"></span><br />
+        <label asp-for="CardBack"></label>:<br />
+        <textarea asp-for="CardBack"></textarea><br />
+        <span asp-validation-for="CardBack"></span><br />
+        <button type="submit">Add Card</button>
+    </div>
 </form>
