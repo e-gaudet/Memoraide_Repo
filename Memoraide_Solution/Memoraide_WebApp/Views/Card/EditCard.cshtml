@@ -1,0 +1,32 @@
+﻿@model CardViewModel
+@{
+    ViewData["Title"] = "Edit Card";
+
+}
+
+@section Scripts{
+    <script type="text/javascript" src="@Url.Content("/js/Card/EditCard.js")"></script>
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Edit Card</h2>
+
+<form asp-action="EditCard" id="Edit">
+    <input type="hidden" asp-for="ID" id="fieldid" />
+    <input type="hidden" asp-for="DeckId" value="1" /><!--Temporary until decks are finished-->
+    <label asp-for="CardFront"></label>:<br />
+    <textarea asp-for="CardFront">@Model.CardFront</textarea><br />
+    <span asp-validation-for="CardFront"></span><br />
+    <label asp-for="CardBack"></label>:<br />
+    <textarea asp-for="CardBack">@Model.CardBack</textarea><br />
+    <span asp-validation-for="CardBack"></span><br />
+    <label asp-for="CardTags"></label>: <input asp-for="CardTags" />@Model.CardTags<br />
+    <span asp-validation-for="CardTags"></span>
+    <button type="submit" onclick="return confirm('Save card changes?');">Save Card</button><button type="reset" onclick="CancelEdit();">Cancel</button>
+</form>

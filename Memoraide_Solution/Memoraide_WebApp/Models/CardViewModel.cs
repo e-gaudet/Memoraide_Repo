@@ -38,7 +38,7 @@ namespace Memoraide_WebApp.Models
             }
         }
 
-
+        public int DeckId { get; set; }
         private List<string> _cardTags;
     }
 }

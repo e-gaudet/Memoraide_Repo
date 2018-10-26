@@ -47,7 +47,7 @@ namespace Memoraide_API.Controllers
                 return BadRequest(ModelState);
             }
             
-            var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id);
+            var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id).First();
             if (card == null)
             {
                 return NotFound();
