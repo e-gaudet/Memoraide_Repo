@@ -10,6 +10,8 @@ namespace Memoraide_API.Models
 {
     public class DataContext : DbContext
     {
+        public DataContext(DbContextOptions<DataContext> options): base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()

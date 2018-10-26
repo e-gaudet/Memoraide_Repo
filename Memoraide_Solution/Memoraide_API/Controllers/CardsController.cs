@@ -9,7 +9,7 @@ using Memoraide_API.Models;
 
 namespace Memoraide_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CardsController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace Memoraide_API.Controllers
         // GET: api/Cards
         [HttpGet]
         public IEnumerable<Card> GetCard()
-        {
+        {            
             return _context.Card;
         }
 
@@ -36,8 +36,8 @@ namespace Memoraide_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var card = await _context.Card.FindAsync(id);
-
+            //var card = await _context.Card.FindAsync(id);
+            var card = _context.Card.FromSql("EXEC dbo.spGetCard {id}");
             if (card == null)
             {
                 return NotFound();
@@ -60,7 +60,7 @@ namespace Memoraide_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(card).State = EntityState.Modified;
+            //_context.Entry(card).State = EntityState.Modified;
 
             try
             {
@@ -89,8 +89,8 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            _context.Card.Add(card);
+            _context.Card.FromSql("EXEC dbo.spAddCard {card}");
+            //_context.Card.Add(card);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
@@ -105,13 +105,15 @@ namespace Memoraide_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var card = await _context.Card.FindAsync(id);
+            //var card = await _context.Card.FindAsync(id);
+            var card = _context.Card.FromSql("EXEC dbo.spGetCard {id}");
             if (card == null)
             {
                 return NotFound();
             }
 
-            _context.Card.Remove(card);
+            //_context.Card.Remove(card);
+            _context.Card.FromSql("EXEC dbo.spDeleteCard {id}");
             await _context.SaveChangesAsync();
 
             return Ok(card);
