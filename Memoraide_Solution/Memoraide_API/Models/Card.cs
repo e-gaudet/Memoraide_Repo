@@ -14,7 +14,7 @@ namespace Memoraide_API.Models
         public string Question { get; set; }
         public string Answer { get; set; }
         public DateTime DateCreated { get; set; }
-        public Boolean IsDeleted { get; set; }
-        public DateTime DateDeleted { get; set; }
+        public Boolean? IsDeleted { get; set; }
+        public DateTime? DateDeleted { get; set; }
     }
 }

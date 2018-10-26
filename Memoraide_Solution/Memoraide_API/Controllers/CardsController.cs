@@ -22,9 +22,20 @@ namespace Memoraide_API.Controllers
 
         // GET: api/Cards
         [HttpGet]
-        public IEnumerable<Card> GetCard()
-        {            
-            return _context.Card;
+        public async Task<IActionResult> GetCard()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var card = _context.Card.FromSql("SELECT * FROM dbo.Cards");
+            if (card == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(card);
         }
 
         // GET: api/Cards/5
@@ -35,9 +46,8 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            //var card = await _context.Card.FindAsync(id);
-            var card = _context.Card.FromSql("EXEC dbo.spGetCard {id}");
+            
+            var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id);
             if (card == null)
             {
                 return NotFound();
@@ -47,20 +57,15 @@ namespace Memoraide_API.Controllers
         }
 
         // PUT: api/Cards/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCard([FromRoute] int id, [FromBody] Card card)
+        [HttpPut]
+        public async Task<IActionResult> PutCard([FromBody] Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != card.Id)
-            {
-                return BadRequest();
-            }
-
-            //_context.Entry(card).State = EntityState.Modified;
+            _context.Card.FromSql("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
 
             try
             {
@@ -68,14 +73,7 @@ namespace Memoraide_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CardExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -89,7 +87,7 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            _context.Card.FromSql("EXEC dbo.spAddCard {card}");
+            _context.Card.FromSql("EXEC dbo.spAddCard {0}", card);
             //_context.Card.Add(card);
             await _context.SaveChangesAsync();
 
@@ -106,14 +104,14 @@ namespace Memoraide_API.Controllers
             }
 
             //var card = await _context.Card.FindAsync(id);
-            var card = _context.Card.FromSql("EXEC dbo.spGetCard {id}");
+            var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id);
             if (card == null)
             {
                 return NotFound();
             }
 
             //_context.Card.Remove(card);
-            _context.Card.FromSql("EXEC dbo.spDeleteCard {id}");
+            _context.Card.FromSql("EXEC dbo.spDeleteCard {0}", id);
             await _context.SaveChangesAsync();
 
             return Ok(card);
