@@ -28,7 +28,7 @@
 <div class="form-horizontal">
     <input type="hidden" asp-for="ID" id="fieldid"/>
     <input type="hidden" asp-for="DeckId" value="1" id="fielddeckid"/><!--Temporary until decks are finished-->
-    <div id="View">
+    <div id="View" style="display: block">
         <label asp-for="CardFront"></label>:<br />
         <div>@Model.CardFront</div><br />
         <label asp-for="CardBack"></label>:<br />
@@ -37,7 +37,7 @@
         <span asp-validation-for="CardTags"></span>
         <button type="button" onclick="ToggleEdit()">Edit</button>
     </div>
-    <form id="Edit" style="display: none">
+    <div id="Edit" style="display: none">
         <label asp-for="CardFront"></label>:<br />
         <textarea asp-for="CardFront" id="fieldcardfront">@Model.CardFront</textarea><br />
         <span asp-validation-for="CardFront"></span><br />
@@ -47,5 +47,5 @@
         <label asp-for="CardTags"></label>: <input asp-for="CardTags" id="fieldtags"/>@Model.CardTags<br />
         <span asp-validation-for="CardTags"></span>
         <button onclick="SubmitEdit();">Save Card</button><button type="reset" onclick="CancelEdit();">Cancel</button>
-    </form>
+    </div>
 </div>

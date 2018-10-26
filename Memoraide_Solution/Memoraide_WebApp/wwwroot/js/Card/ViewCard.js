@@ -8,7 +8,7 @@
 
     var view = document.getElementById("View");
     if (view.style.display === "none") {
-        viewx.style.display = "block";
+        view.style.display = "block";
     } else {
         view.style.display = "none";
     }

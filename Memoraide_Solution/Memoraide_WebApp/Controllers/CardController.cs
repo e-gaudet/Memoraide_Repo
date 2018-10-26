@@ -66,13 +66,17 @@ namespace Memoraide_WebApp.Controllers
                 jsonstring.Wait();
                 CardViewModel model = JsonConvert.DeserializeObject<CardViewModel>(jsonstring.Result);
 
-                TempData["message"] = "Successfully added " + model.CardBack + " to " + "tempdeckname";
+                if (model.CardFront == null)
+                {
+                    model.CardFront = "test";
+                    model.CardBack = "test";
+                }
                 return View(model);
             }
             else
             {
                 TempData["message"] = "Unable to grab card data";
-                return View();
+                return NotFound();
             }
         }
 
@@ -94,13 +98,13 @@ namespace Memoraide_WebApp.Controllers
                 {
                     TempData["message"] = "Updating card " + model.CardBack + " was unsuccessful.";
                     TempData["edit"] = true;
-                    return View("ViewCard", model);
+                    return NoContent();
                 }
             }
             else
             {
                 TempData["edit"] = true;
-                return View("ViewCard", model);
+                return NoContent();
             }
         }
     }
