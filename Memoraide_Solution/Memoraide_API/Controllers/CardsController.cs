@@ -65,7 +65,8 @@ namespace Memoraide_API.Controllers
 
             try
             {
-                _context.Card.FromSql("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
+                //_context.Card.FromSql("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
 
                 //await _context.SaveChangesAsync();
             }
@@ -85,9 +86,8 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var res =_context.Card.FromSql("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
 
-            //await _context.SaveChangesAsync();
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
 
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
         }
@@ -100,14 +100,15 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+             
             var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id);
             if (card == null)
             {
                 return NotFound();
             }
-            
-            _context.Card.FromSql("EXEC dbo.spDeleteCard {0}", id);
+
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spDeleteCard {0}", id);
+            //_context.Card.FromSql("EXEC dbo.spDeleteCard {0}", id);
             //await _context.SaveChangesAsync();
 
             return Ok(card);
