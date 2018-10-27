@@ -23,11 +23,65 @@
 }
 
 <h2>View Card</h2>
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].DeckId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Question)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Answer)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var card in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelCard => card.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelCard => card.DeckId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelCard => card.Question)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelCard => card.Answer)
+                </td>
+                <!--Links-->
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                    <a asp-action="ViewCard" asp-route-id="@card.ID">Details</a> @*|
+                    <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                </td>
 
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert">
+        ALERT: No cards could be found!
+    </div>
+}
 
-<div class="form-horizontal">
+@*<div class="form-horizontal">
     @for (int i = 0; i < Model.Count(); i++)
     {
+
+
         <input type="hidden" asp-for="@Model[i].ID" id="fieldid" />
         <input type="hidden" asp-for="@Model[i].DeckId" value="1" id="fielddeckid" /><!--Temporary until decks are finished-->
         <div id="View" style="display: block">
@@ -35,8 +89,8 @@
             <div>@Model[i].Question</div><br />
             <label asp-for="@Model[i].Answer"></label>:<br />
             <div>@Model[i].Answer</div><br />
-           <!-- <label asp-for="Model[i].CardTags"></label>: <div>Model[i].CardTags</div><br />
-            <span asp-validation-for="Model[i].CardTags"></span>-->
+            <!-- <label asp-for="Model[i].CardTags"></label>: <div>Model[i].CardTags</div><br />
+             <span asp-validation-for="Model[i].CardTags"></span>-->
             <button type="button" onclick="ToggleEdit()">Edit</button>
         </div>
         <div id="Edit" style="display: none">
@@ -52,4 +106,4 @@
         </div>
     }
 
-</div>
+</div>*@
