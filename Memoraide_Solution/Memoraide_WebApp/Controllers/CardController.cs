@@ -30,7 +30,7 @@ namespace Memoraide_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CardFront,CardBack,CardTags,DeckId")] CardViewModel model)
+        public async Task<IActionResult> Create([Bind("Question,Answer,DeckId")] CardViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -40,12 +40,12 @@ namespace Memoraide_WebApp.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = "Successfully added " + model.CardBack + " to " + "tempdeckname";
+                    TempData["message"] = "Successfully added " + model.Answer + " to " + "tempdeckname";
                     return RedirectToAction("Create");
                 }
                 else
                 {
-                    TempData["message"] = "Adding card " + model.CardBack + " was unsuccessful.";
+                    TempData["message"] = "Adding card " + model.Answer + " was unsuccessful.";
                     return View(model);
                 }
             }
@@ -54,23 +54,23 @@ namespace Memoraide_WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewCard(int id)
+        public async Task<IActionResult> ViewCard()
         {
-            string url = "https://localhost:44356/Cards/" + id;
+            string url = "https://localhost:44356/Cards/";
 
             var response = await client.GetAsync(url);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
-                CardViewModel model = JsonConvert.DeserializeObject<CardViewModel>(jsonstring.Result);
+                List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
 
-                if (model.CardFront == null)
-                {
-                    model.CardFront = "test";
-                    model.CardBack = "test";
-                }
+                //if (model.Question == null)
+               // {
+               //     model.Question = "test";
+               //     model.Answer = "test";
+               // }
                 return View(model);
             }
             else
@@ -80,8 +80,35 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> ViewCard(int id)
+        //{
+        //    string url = "https://localhost:44356/Cards/" + id;
+
+        //    var response = await client.GetAsync(url);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var jsonstring = response.Content.ReadAsStringAsync();
+        //        jsonstring.Wait();
+        //        CardViewModel model = JsonConvert.DeserializeObject<CardViewModel>(jsonstring.Result);
+
+        //        if (model.Question == null)
+        //        {
+        //            model.Question = "test";
+        //            model.Answer = "test";
+        //        }
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        TempData["message"] = "Unable to grab card data";
+        //        return NotFound();
+        //    }
+        //}
+
         [HttpPut]
-        public async Task<IActionResult> EditCard([Bind("ID")] int id, [Bind("ID,CardFront,CardBack,CardTags,DeckId")] CardViewModel model)
+        public async Task<IActionResult> EditCard([Bind("ID")] int id, [Bind("ID,Question,Answer,CardTags,DeckId")] CardViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -91,12 +118,12 @@ namespace Memoraide_WebApp.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = model.CardBack + " updated.";
+                    TempData["message"] = model.Answer + " updated.";
                     return View("ViewCard", model);
                 }
                 else
                 {
-                    TempData["message"] = "Updating card " + model.CardBack + " was unsuccessful.";
+                    TempData["message"] = "Updating card " + model.Answer + " was unsuccessful.";
                     TempData["edit"] = true;
                     return NoContent();
                 }

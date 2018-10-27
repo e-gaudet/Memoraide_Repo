@@ -1,0 +1,23 @@
+﻿@model DeckViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Create</h2>
+
+<form asp-controller="Deck" asp-action="Create" method="post">
+    <div class="form-horizontal">
+        <input type="hidden" asp-for="UserId" value="1" />
+        <label asp-for="DeckName"></label>:<br />
+        <textarea asp-for="DeckName"></textarea><br />
+        <span asp-validation-for="DeckName"></span><br />
+        <button type="submit">Add Deck</button><button type="reset" onclick="return confirm('Clear deck?');">Clear Deck</button>
+    </div>
+</form>

@@ -1,0 +1,27 @@
+﻿@model DeckViewModel
+@{
+    ViewData["Title"] = "Edit Deck";
+
+}
+
+@section Scripts{
+    <script type="text/javascript" src="@Url.Content("/js/Deck/EditDeck.js")"></script>
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Edit Card</h2>
+
+<form asp-action="EditDeck" id="Edit">
+    <input type="hidden" asp-for="ID" id="fieldid" />
+    <input type="hidden" asp-for="UserId" value="1" />
+    <label asp-for="DeckName"></label>:<br />
+    <textarea asp-for="DeckName">@Model.DeckName</textarea><br />
+    <span asp-validation-for="DeckName"></span><br />
+    <button type="submit" onclick="return confirm('Save deck changes?');">Save Deck</button><button type="reset" onclick="CancelEdit();">Cancel</button>
+</form>

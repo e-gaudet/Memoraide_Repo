@@ -1,4 +1,4 @@
-﻿@model CardViewModel
+﻿@model List<CardViewModel>
 @{
     ViewData["Title"] = "View Card";
 
@@ -26,26 +26,30 @@
 
 
 <div class="form-horizontal">
-    <input type="hidden" asp-for="ID" id="fieldid"/>
-    <input type="hidden" asp-for="DeckId" value="1" id="fielddeckid"/><!--Temporary until decks are finished-->
-    <div id="View" style="display: block">
-        <label asp-for="CardFront"></label>:<br />
-        <div>@Model.CardFront</div><br />
-        <label asp-for="CardBack"></label>:<br />
-        <div>@Model.CardBack</div><br />
-        <label asp-for="CardTags"></label>: <div>@Model.CardTags</div><br />
-        <span asp-validation-for="CardTags"></span>
-        <button type="button" onclick="ToggleEdit()">Edit</button>
-    </div>
-    <div id="Edit" style="display: none">
-        <label asp-for="CardFront"></label>:<br />
-        <textarea asp-for="CardFront" id="fieldcardfront">@Model.CardFront</textarea><br />
-        <span asp-validation-for="CardFront"></span><br />
-        <label asp-for="CardBack"></label>:<br />
-        <textarea asp-for="CardBack" id="fieldcardback">@Model.CardBack</textarea><br />
-        <span asp-validation-for="CardBack"></span><br />
-        <label asp-for="CardTags"></label>: <input asp-for="CardTags" id="fieldtags"/>@Model.CardTags<br />
-        <span asp-validation-for="CardTags"></span>
-        <button onclick="SubmitEdit();">Save Card</button><button type="reset" onclick="CancelEdit();">Cancel</button>
-    </div>
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <input type="hidden" asp-for="@Model[i].ID" id="fieldid" />
+        <input type="hidden" asp-for="@Model[i].DeckId" value="1" id="fielddeckid" /><!--Temporary until decks are finished-->
+        <div id="View" style="display: block">
+            <label asp-for="@Model[i].Question"></label>:<br />
+            <div>@Model[i].Question</div><br />
+            <label asp-for="@Model[i].Answer"></label>:<br />
+            <div>@Model[i].Answer</div><br />
+           <!-- <label asp-for="Model[i].CardTags"></label>: <div>Model[i].CardTags</div><br />
+            <span asp-validation-for="Model[i].CardTags"></span>-->
+            <button type="button" onclick="ToggleEdit()">Edit</button>
+        </div>
+        <div id="Edit" style="display: none">
+            <label asp-for="@Model[i].Question"></label>:<br />
+            <textarea asp-for="@Model[i].Question" id="fieldQuestion">@Model[i].Question</textarea><br />
+            <span asp-validation-for="@Model[i].Question"></span><br />
+            <label asp-for="@Model[i].Answer"></label>:<br />
+            <textarea asp-for="@Model[i].Answer" id="fieldAnswer">@Model[i]..Answer</textarea><br />
+            <span asp-validation-for="@Model[i].Answer"></span><br />
+            <!--<label asp-for="Model[i].CardTags"></label>: <input asp-for="Model[i].CardTags" id="fieldtags" />Model[i].CardTags<br />
+            <span asp-validation-for="Model[i].CardTags"></span>-->
+            <button onclick="SubmitEdit();">Save Card</button><button type="reset" onclick="CancelEdit();">Cancel</button>
+        </div>
+    }
+
 </div>

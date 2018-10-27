@@ -87,7 +87,7 @@ namespace Memoraide_API.Controllers
             _context.Card.FromSql("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
 
             await _context.SaveChangesAsync();
-
+            var res = _context;
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
         }
 

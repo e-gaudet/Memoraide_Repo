@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Memoraide_WebApp", "Memoraide_WebApp\Memoraide_WebApp.csproj", "{8D0D25B4-68FD-49A7-BB05-CD36248A20B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Memoraide_API", "Memoraide_API\Memoraide_API.csproj", "{5AF16A94-D8F6-4FD6-8088-C75B60D73E13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Memoraide_API", "Memoraide_API\Memoraide_API.csproj", "{5AF16A94-D8F6-4FD6-8088-C75B60D73E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

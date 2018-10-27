@@ -15,7 +15,7 @@
 }
 
 function CancelEdit() {
-    var cancel = confirm('Cancel edit card?');
+    var cancel = confirm('Cancel edit deck?');
     if (cancel) {
         //Reset fields?
         ToggleEdit();
@@ -25,14 +25,16 @@ function CancelEdit() {
 function SubmitEdit() {
     var model = {
         ID: document.getElementById('fieldid').value,
-        UserId: document.getElementById('fielddeckid').value,
-        DeckName: document.getElementById('fieldDeckname').value
+        DeckId: document.getElementById('fielduserid').value,
+        Question: document.getElementById('fieldQuestion').value,
+        Answer: document.getElementById('fieldAnswer').value,
+        CardTags: document.getElementById('fieldtags').value
     };
 
     $.ajax({
         method: "put",
         data: model,
-        url: "/Deck/EditDeck/" + model.ID
+        url: "/Card/EditCard/" + model.ID
     });
 
 }
