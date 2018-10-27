@@ -61,12 +61,13 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            _context.Card.FromSql("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
 
 
             try
             {
-                await _context.SaveChangesAsync();
+                _context.Card.FromSql("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
+
+                //await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,10 +85,10 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            _context.Card.FromSql("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
+            var res =_context.Card.FromSql("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
 
-            await _context.SaveChangesAsync();
-            var res = _context;
+            //await _context.SaveChangesAsync();
+
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
         }
 
@@ -107,7 +108,7 @@ namespace Memoraide_API.Controllers
             }
             
             _context.Card.FromSql("EXEC dbo.spDeleteCard {0}", id);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
 
             return Ok(card);
         }
