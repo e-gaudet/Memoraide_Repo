@@ -56,7 +56,7 @@ namespace Memoraide_API.Controllers
             return Ok(card);
         }
 
-        // PUT: api/Cards/5
+        // PUT: api/Cards/card
         [HttpPut]
         public async Task<IActionResult> PutCard([FromBody] Card card)
         {
@@ -87,8 +87,8 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            _context.Card.FromSql("EXEC dbo.spAddCard {0}", card);
-            //_context.Card.Add(card);
+
+            _context.Card.FromSql("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", card.Id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
@@ -102,15 +102,13 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            //var card = await _context.Card.FindAsync(id);
+            
             var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id);
             if (card == null)
             {
                 return NotFound();
             }
-
-            //_context.Card.Remove(card);
+            
             _context.Card.FromSql("EXEC dbo.spDeleteCard {0}", id);
             await _context.SaveChangesAsync();
 
