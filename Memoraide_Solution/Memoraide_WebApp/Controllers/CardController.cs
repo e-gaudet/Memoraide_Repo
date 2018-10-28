@@ -67,16 +67,13 @@ namespace Memoraide_WebApp.Controllers
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
                 List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
-<<<<<<< HEAD
 
                 //if (model.Question == null)
                 // {
                 //     model.Question = "test";
                 //     model.Answer = "test";
                 // }
-=======
-                               
->>>>>>> 30bb25ba7dbfad3ebb185394834eed5bc9a2a90a
+
                 return View(model);
             }
             else
@@ -118,14 +115,17 @@ namespace Memoraide_WebApp.Controllers
         //[HttpPut]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ViewCardDetail([Bind("ID")] int id, [Bind("ID,Question,Answer,CardTags,DeckId")] CardViewModel model)
+        public async Task<IActionResult> ViewCardDetail([Bind("ID")] int id, [Bind("ID","Question","Answer","CardTags","DeckId")] CardViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 string url = "https://localhost:44356/Cards/" + id;
 
-                var response = await client.PutAsJsonAsync(url, model);
+                //if no {get; set;} on model ID, this is needed.
+                model.ID = id;
 
+                var response = await client.PutAsJsonAsync(url, model);
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["message"] = model.Answer + " updated.";

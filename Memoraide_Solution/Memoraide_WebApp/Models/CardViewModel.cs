@@ -10,6 +10,7 @@ namespace Memoraide_WebApp.Models
     public class CardViewModel
     {
         public int ID;
+        //public int ID { get; set; }
 
         [Required]
         [Display(Name = "Card Front")]

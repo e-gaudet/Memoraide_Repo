@@ -57,6 +57,7 @@ namespace Memoraide_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCard([FromRoute] int id,[FromBody] Card card)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
