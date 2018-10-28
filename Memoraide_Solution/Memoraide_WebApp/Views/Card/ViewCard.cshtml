@@ -81,7 +81,6 @@ else
     @for (int i = 0; i < Model.Count(); i++)
     {
 
-
         <input type="hidden" asp-for="@Model[i].ID" id="fieldid" />
         <input type="hidden" asp-for="@Model[i].DeckId" value="1" id="fielddeckid" /><!--Temporary until decks are finished-->
         <div id="View" style="display: block">

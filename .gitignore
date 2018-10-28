@@ -1,3 +1,4 @@
 *.csproj.CoreCompileInputs.cache
 *.cache
 Memoraide_Solution/Memoraide_WebApp/obj/Memoraide_WebApp.csproj.nuget.g.targets
+Memoraide_Solution/Memoraide_API/Controllers/CardsController.cs

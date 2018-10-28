@@ -27,7 +27,7 @@ namespace Memoraide_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeckName")] DeckViewModel model)
+        public async Task<IActionResult> Create([Bind("Name,UserId")] DeckViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -37,12 +37,12 @@ namespace Memoraide_WebApp.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = "Successfully created " +  model.DeckName;
+                    TempData["message"] = "Successfully created " +  model.Name;
                     return RedirectToAction("Create");
                 }
                 else
                 {
-                    TempData["message"] = "Adding deck " + model.DeckName + " was unsuccessful.";
+                    TempData["message"] = "Adding deck " + model.Name + " was unsuccessful.";
                     return View(model);
                 }
             }
@@ -50,7 +50,7 @@ namespace Memoraide_WebApp.Controllers
                 return View(model);
         }
         [HttpGet]
-        public async Task<IActionResult> ViewDeck(int id)
+        public async Task<IActionResult> ViewDeck()
         {
             string url = "https://localhost:44356/Decks/";
 
@@ -62,10 +62,10 @@ namespace Memoraide_WebApp.Controllers
                 jsonstring.Wait();
                 List<DeckViewModel> model = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
 
-               // if (model.DeckName == null)
-               // {
-               //     model.DeckName = "test";
-               // }
+                 if (model[0].Name == null)
+                 {
+                     model[0].Name = "test";
+                 }
                 return View(model);
             }
             else
@@ -86,12 +86,12 @@ namespace Memoraide_WebApp.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = model.DeckName + " updated.";
+                    TempData["message"] = model.Name + " updated.";
                     return View("ViewDeck", model);
                 }
                 else
                 {
-                    TempData["message"] = "Updating deck " + model.DeckName + " was unsuccessful.";
+                    TempData["message"] = "Updating deck " + model.Name + " was unsuccessful.";
                     TempData["edit"] = true;
                     return NoContent();
                 }

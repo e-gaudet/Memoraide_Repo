@@ -7,6 +7,8 @@ using Memoraide_WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace Memoraide_WebApp.Controllers
 {
     public class CardController : Controller
@@ -65,12 +67,7 @@ namespace Memoraide_WebApp.Controllers
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
                 List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
-
-                //if (model.Question == null)
-               // {
-               //     model.Question = "test";
-               //     model.Answer = "test";
-               // }
+                               
                 return View(model);
             }
             else
