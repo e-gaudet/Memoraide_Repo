@@ -31,14 +31,14 @@
         <input type="hidden" asp-for="@Model[i].ID" id="fieldid" />
         <input type="hidden" asp-for="@Model[i].UserId" value="1" id="fielduserid" />
         <div id="View" style="display: block">
-            <label asp-for="@Model[i].DeckName"></label>:<br />
-            <div>Model[i].DeckName</div><br />
+            <label asp-for="@Model[i].Name"></label>:<br />
+            <div>@Model[i].Name</div><br />
             <button type="button" onclick="ToggleEdit()">Edit</button>
         </div>
         <div id="Edit" style="display: none">
-            <label asp-for="@Model[i].DeckName"></label>:<br />
-            <textarea asp-for="@Model[i].DeckName" id="fieldDeckname">@Model[i].DeckName</textarea><br />
-            <span asp-validation-for="@Model[i].DeckName"></span><br />
+            <label asp-for="@Model[i].Name"></label>:<br />
+            <textarea asp-for="@Model[i].Name" id="fieldDeckname">@Model[i].Name</textarea><br />
+            <span asp-validation-for="@Model[i].Name"></span><br />
             <button onclick="SubmitEdit();">Save Deck</button><button type="reset" onclick="CancelEdit();">Cancel</button>
         </div>
     }

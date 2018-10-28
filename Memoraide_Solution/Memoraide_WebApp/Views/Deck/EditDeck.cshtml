@@ -20,8 +20,8 @@
 <form asp-action="EditDeck" id="Edit">
     <input type="hidden" asp-for="ID" id="fieldid" />
     <input type="hidden" asp-for="UserId" value="1" />
-    <label asp-for="DeckName"></label>:<br />
-    <textarea asp-for="DeckName">@Model.DeckName</textarea><br />
-    <span asp-validation-for="DeckName"></span><br />
+    <label asp-for="Name"></label>:<br />
+    <textarea asp-for="Name">@Model.Name</textarea><br />
+    <span asp-validation-for="Name"></span><br />
     <button type="submit" onclick="return confirm('Save deck changes?');">Save Deck</button><button type="reset" onclick="CancelEdit();">Cancel</button>
 </form>
