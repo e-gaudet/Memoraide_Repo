@@ -4,59 +4,78 @@
     ViewData["Title"] = "Card Details";
 }
 
+
+
+
 <h2>Card Details</h2>
 
 <h4>To edit the card information, ender new data into Card Front / card back.</h4>
 <hr />
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["edit"] != null)
+{
+    <script>
+        ToggleEdit();
+    </script>
+}
+
+
 <div class="row">
     <div class="col-md-4">
-            @*<form asp-controller="Card" asp-action="ViewCardDetail" method="put">*@
-            <form asp-controller="Card" asp-action="ViewCardDetail">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Question" class="control-label"></label>
-                    <input asp-for="Question" class="form-control" />
-                    <span asp-validation-for="Question" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Answer" class="control-label"></label>
-                    <input asp-for="Answer" class="form-control" />
-                    <span asp-validation-for="Answer" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="DeckId" class="control-label"></label>
-                    <input asp-for="DeckId" class="form-control" readonly="@(true)" />
-                </div>
-                <div class="form-group">
-                    <label asp-for="ID" class="control-label"></label>
-                    <input asp-for="ID" class="form-control" readonly="@(true)" />
-                </div>
-                <div class="form-group">
-                    <label asp-for="DateCreated" class="control-label"></label>
-                    <input asp-for="DateCreated" class="form-control" readonly="@(true)" />
-                </div>
-                @*<div class="form-group">
-                <label asp-for="isDeleted" class="control-label"></label>
-                <input asp-for="isDeleted" class="form-control" />
-                <span asp-validation-for="isDeleted" class="text-danger"></span>
+        @*<form asp-controller="Card" asp-action="ViewCardDetail" method="put">*@
+        <form asp-controller="Card" asp-action="ViewCardDetail">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Question" class="control-label"></label>
+                <input asp-for="Question" class="form-control" />
+                <span asp-validation-for="Question" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateDeleted" class="control-label"></label>
-                <input asp-for="DateDeleted" class="form-control" />
-                <span asp-validation-for="DateDeleted" class="text-danger"></span>
-            </div>*@
-                <div class="form-group">
-                    <!--TODO: get this working with the save method. add a delete button here too.-->
-                        <input type="submit" value="Edit (TODO FIX)" class="btn btn-default"  onsubmit="location.href='@Url.Action("ViewCard", "Card")'"/>
-                   
-
+                <label asp-for="Answer" class="control-label"></label>
+                <input asp-for="Answer" class="form-control" />
+                <span asp-validation-for="Answer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeckId" class="control-label"></label>
+                <input asp-for="DeckId" class="form-control" readonly="@(true)" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ID" class="control-label"></label>
+                <input asp-for="ID" class="form-control" readonly="@(true)" />
+            </div>
+            <div class="form-group">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input asp-for="DateCreated" class="form-control" readonly="@(true)" />
+            </div>
+            @*<div class="form-group">
+                    <label asp-for="isDeleted" class="control-label"></label>
+                    <input asp-for="isDeleted" class="form-control" />
+                    <span asp-validation-for="isDeleted" class="text-danger"></span>
                 </div>
-                @*<div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>*@
+                <div class="form-group">
+                    <label asp-for="DateDeleted" class="control-label"></label>
+                    <input asp-for="DateDeleted" class="form-control" />
+                    <span asp-validation-for="DateDeleted" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
+                <!--TODO: onSubmit not working.-->
+                <input type="submit" value="Edit (TODO FIX)" class="btn btn-default" />
 
-            </form>
-</div>
+
+            </div>
+            @*<div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>*@
+
+        </form>
+    </div>
 </div>
 
 <div>
