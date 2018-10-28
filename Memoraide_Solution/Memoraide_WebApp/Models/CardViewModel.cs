@@ -46,7 +46,7 @@ namespace Memoraide_WebApp.Models
         public bool? isDeleted { get; set; }
         public DateTime? DateDeleted { get; set; }
 
-       // public List<DeckViewModel> decks { get; set; }
+        public IEnumerable<SelectListItem> decks { get; set; }
        // private List<string> _cardTags;
     }
 }

@@ -25,8 +25,9 @@ namespace Memoraide_WebApp.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await GetAllData_Test();
             return View();
         }
 
@@ -52,46 +53,45 @@ namespace Memoraide_WebApp.Controllers
                 }
             }
             else
+            {
                 return View(model);
+            }
         }
 
-        
-        //public async Task<IActionResult> GetAllData_Test()
-        //{
-        //    string url1 = "https://localhost:44356/Cards/";
-        //    var response = await client.GetAsync(url1);
 
-        //    CardsDecksViewModel model = new CardsDecksViewModel();
+        public async Task<IActionResult> GetAllData_Test()
+        {
 
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var jsonstring = response.Content.ReadAsStringAsync();
-        //        jsonstring.Wait();
-        //        model.cardViewModel = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
-        //    }
-        //    else
-        //    {
-        //        TempData["message"] = "Unable to grab card data";
-        //        return NotFound();
-        //    }
+            CardViewModel model = new CardViewModel();
 
-        //    string url2 = "https://localhost:44356/Decks/";
-        //    response = await client.GetAsync(url2);
+            string url2 = "https://localhost:44356/Decks/";
+            var response = await client.GetAsync(url2);
 
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var jsonstring = response.Content.ReadAsStringAsync();
-        //        jsonstring.Wait();
-        //        model.deckViewModel = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        TempData["message"] = "Unable to grab Deck data";
-        //        return NotFound();
-        //    }
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                IEnumerable<DeckViewModel> decks = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+                var selectList = new List<SelectListItem>();
 
-        //}
+                foreach(var element in decks)
+                {
+                    selectList.Add(new SelectListItem
+                    {
+                        Value = element.ID.ToString(),
+                        Text = element.Name
+                    });
+                }
+                model.decks = selectList;
+                return View(model);
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab Deck data";
+                return NotFound();
+            }
+
+        }
 
         [HttpGet]
         public async Task<IActionResult> ViewCard()
@@ -105,6 +105,8 @@ namespace Memoraide_WebApp.Controllers
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
                 List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
+
+
 
                 //if (model.Question == null)
                 // {
@@ -124,6 +126,7 @@ namespace Memoraide_WebApp.Controllers
         //[HttpGet] //This needs to go for routing a post!
         public async Task<IActionResult> ViewCardDetail(int? id)
         {
+            
             string url = "https://localhost:44356/Cards/" + id;
 
             var response = await client.GetAsync(url);
@@ -134,10 +137,25 @@ namespace Memoraide_WebApp.Controllers
                 jsonstring.Wait();
                 CardViewModel model = JsonConvert.DeserializeObject<CardViewModel>(jsonstring.Result);
 
-                if (model.Question == null)
+                string url2 = "https://localhost:44356/Decks/";
+                response = await client.GetAsync(url2);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    model.Question = "test";
-                    model.Answer = "test";
+                    jsonstring = response.Content.ReadAsStringAsync();
+                    jsonstring.Wait();
+                    IEnumerable<DeckViewModel> decks = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+                    var selectList = new List<SelectListItem>();
+
+                    foreach (var element in decks)
+                    {
+                        selectList.Add(new SelectListItem
+                        {
+                            Value = element.ID.ToString(),
+                            Text = element.Name
+                        });
+                    }
+                    model.decks = selectList;                    
                 }
                 return View(model);
             }
@@ -147,6 +165,7 @@ namespace Memoraide_WebApp.Controllers
                 return NotFound();
             }
         }
+
 
         //RENAMED from EditCard. viewCardDetail's post will handle the edit. none of the code was changed my me.
         //[HttpPut, Route("{id,:int}")]
@@ -168,7 +187,6 @@ namespace Memoraide_WebApp.Controllers
                 {
                     TempData["message"] = model.Answer + " updated.";
 
-                    return View(model);
                     return NoContent();
                 }
                 else

@@ -14,8 +14,16 @@
 
 <form asp-controller="Card" asp-action="Create" method="post">
     <div class="form-horizontal">
-        input type="hidden" asp-for="DeckId" value="1" /><!--<Temporary until decks are finished-->
-        <label asp-for="Question"></label>:<br />
+        <!--<input type="hidden" asp-for="DeckId" value="1" /><!--<Temporary until decks are finished-->     
+        <br />
+        @Html.LabelFor(m => m.decks)
+        @Html.DropDownListFor(m => m.DeckId,
+                                Model.decks,
+                                "Select a deck",
+                                new { @class = "form-control"})
+        
+        <br />
+        <label asp-for="Question"></label><br />
         <textarea asp-for="Question"></textarea><br />
         <span asp-validation-for="Question"></span><br />
         <label asp-for="Answer"></label>:<br />
