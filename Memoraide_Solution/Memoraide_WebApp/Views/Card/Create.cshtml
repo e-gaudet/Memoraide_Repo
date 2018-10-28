@@ -3,7 +3,7 @@
     ViewData["Title"] = "Create";
 }
 
-@if(TempData["message"] != null)
+@if (TempData["message"] != null)
 {
     <div class="alert">
         @TempData["Message"]
@@ -14,7 +14,7 @@
 
 <form asp-controller="Card" asp-action="Create" method="post">
     <div class="form-horizontal">
-        <input type="hidden" asp-for="DeckId" value="1" /><!--Temporary until decks are finished-->
+        input type="hidden" asp-for="DeckId" value="1" /><!--<Temporary until decks are finished-->
         <label asp-for="Question"></label>:<br />
         <textarea asp-for="Question"></textarea><br />
         <span asp-validation-for="Question"></span><br />

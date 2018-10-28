@@ -7,6 +7,8 @@ using Memoraide_WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace Memoraide_WebApp.Controllers
 {
     public class CardController : Controller
@@ -67,10 +69,11 @@ namespace Memoraide_WebApp.Controllers
                 List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
 
                 //if (model.Question == null)
-               // {
-               //     model.Question = "test";
-               //     model.Answer = "test";
-               // }
+                // {
+                //     model.Question = "test";
+                //     model.Answer = "test";
+                // }
+
                 return View(model);
             }
             else
@@ -80,7 +83,7 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
-        [HttpGet]
+        //[HttpGet] //This needs to go for routing a post!
         public async Task<IActionResult> ViewCardDetail(int? id)
         {
             string url = "https://localhost:44356/Cards/" + id;
@@ -107,19 +110,28 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditCard([Bind("ID")] int id, [Bind("ID,Question,Answer,CardTags,DeckId")] CardViewModel model)
+        //RENAMED from EditCard. viewCardDetail's post will handle the edit. none of the code was changed my me.
+        //[HttpPut, Route("{id,:int}")]
+        //[HttpPut]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewCardDetail([Bind("ID")] int id, [Bind("ID","Question","Answer","CardTags","DeckId")] CardViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 string url = "https://localhost:44356/Cards/" + id;
 
-                var response = await client.PutAsJsonAsync(url, model);
+                //if no {get; set;} on model ID, this is needed.
+                model.ID = id;
 
+                var response = await client.PutAsJsonAsync(url, model);
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["message"] = model.Answer + " updated.";
-                    return View("ViewCard", model);
+
+                    return View(model);
+                    return NoContent();
                 }
                 else
                 {

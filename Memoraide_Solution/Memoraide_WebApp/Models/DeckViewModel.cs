@@ -14,7 +14,7 @@ namespace Memoraide_WebApp.Models
         [Required]
         [Display(Name = "Deck Name")]
         [MaxLength(1024)]
-        public string DeckName{ get; set; }
+        public string Name{ get; set; }
         public int UserId { get; set; }
         public DateTime? DateCreated { get; set; }
         public bool? isDeleted { get; set; }

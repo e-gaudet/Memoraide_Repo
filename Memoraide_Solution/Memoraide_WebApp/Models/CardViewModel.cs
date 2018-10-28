@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Memoraide_WebApp.Models
 {
     public class CardViewModel
     {
         public int ID;
+        //public int ID { get; set; }
 
         [Required]
         [Display(Name = "Card Front")]
@@ -44,6 +46,7 @@ namespace Memoraide_WebApp.Models
         public bool? isDeleted { get; set; }
         public DateTime? DateDeleted { get; set; }
 
+       // public List<DeckViewModel> decks { get; set; }
        // private List<string> _cardTags;
     }
 }
