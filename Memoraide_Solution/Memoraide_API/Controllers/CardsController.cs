@@ -54,7 +54,7 @@ namespace Memoraide_API.Controllers
             return Ok(card);
         }
 
-        // GET: /Cards/Tag 5,Tag 2
+        // GET: /Cards/search/Tag 5,Tag 2
         [HttpGet("search/{tags}")]
         public async Task<IActionResult> GetCard([FromRoute] string tags)
         {
