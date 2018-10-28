@@ -129,7 +129,34 @@ namespace Memoraide_WebApp.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["message"] = model.Answer + " updated.";
-                    return View("ViewCard", model);
+
+                    //testing!
+                        string url2 = "https://localhost:44356/Cards/" + id;
+
+                        var response2 = await client.GetAsync(url);
+
+                        if (response2.IsSuccessStatusCode)
+                        {
+                            var jsonstring = response.Content.ReadAsStringAsync();
+                            jsonstring.Wait();
+                            CardViewModel model2 = JsonConvert.DeserializeObject<CardViewModel>(jsonstring.Result);
+
+                            if (model2.Question == null)
+                            {
+                                model2.Question = "test";
+                                model2.Answer = "test";
+                            }
+                            return View(model2);
+                        }
+                        else
+                        {
+                            TempData["message"] = "Unable to grab card data";
+                            return NotFound();
+                        }
+                    //testing end
+
+                    return View(model);
+                    return NoContent();
                 }
                 else
                 {
