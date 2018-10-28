@@ -55,6 +55,44 @@ namespace Memoraide_WebApp.Controllers
                 return View(model);
         }
 
+        
+        //public async Task<IActionResult> GetAllData_Test()
+        //{
+        //    string url1 = "https://localhost:44356/Cards/";
+        //    var response = await client.GetAsync(url1);
+
+        //    CardsDecksViewModel model = new CardsDecksViewModel();
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var jsonstring = response.Content.ReadAsStringAsync();
+        //        jsonstring.Wait();
+        //        model.cardViewModel = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
+        //    }
+        //    else
+        //    {
+        //        TempData["message"] = "Unable to grab card data";
+        //        return NotFound();
+        //    }
+
+        //    string url2 = "https://localhost:44356/Decks/";
+        //    response = await client.GetAsync(url2);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var jsonstring = response.Content.ReadAsStringAsync();
+        //        jsonstring.Wait();
+        //        model.deckViewModel = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        TempData["message"] = "Unable to grab Deck data";
+        //        return NotFound();
+        //    }
+
+        //}
+
         [HttpGet]
         public async Task<IActionResult> ViewCard()
         {
