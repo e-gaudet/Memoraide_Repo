@@ -17,7 +17,7 @@ namespace Memoraide_API.Controllers
             _context = context;
         }
 
-        // GET: api/Cards
+        // GET: /Cards
         [HttpGet]
         public async Task<IActionResult> GetCard()
         {
@@ -35,7 +35,7 @@ namespace Memoraide_API.Controllers
             return Ok(card);
         }
 
-        // GET: api/Cards/5
+        // GET: /Cards/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCard([FromRoute] int id)
         {
@@ -53,7 +53,7 @@ namespace Memoraide_API.Controllers
             return Ok(card);
         }
 
-        // PUT: api/Cards/card
+        // PUT: /Cards/card
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCard([FromRoute] int id,[FromBody] Card card)
         {
@@ -65,10 +65,7 @@ namespace Memoraide_API.Controllers
 
             try
             {
-                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
-                //_context.Card.FromSql("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}, {4}", id, card.DeckId, card.Question, card.Answer, card.IsDeleted);
-
-                //await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spUpdateCard {0}, {1}, {2}, {3}", id, card.DeckId, card.Question, card.Answer);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,7 +75,7 @@ namespace Memoraide_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Cards
+        // POST: /Cards
         [HttpPost]
         public async Task<IActionResult> PostCard([FromBody] Card card)
         {
@@ -92,7 +89,7 @@ namespace Memoraide_API.Controllers
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
         }
 
-        // DELETE: api/Cards/5
+        // DELETE: /Cards/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCard([FromRoute] int id)
         {
@@ -108,8 +105,6 @@ namespace Memoraide_API.Controllers
             }
 
             await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spDeleteCard {0}", id);
-            //_context.Card.FromSql("EXEC dbo.spDeleteCard {0}", id);
-            //await _context.SaveChangesAsync();
 
             return Ok(card);
         }

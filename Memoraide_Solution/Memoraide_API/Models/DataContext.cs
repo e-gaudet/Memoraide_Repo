@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Memoraide_API.Models;
 
 namespace Memoraide_API.Models
 {
@@ -22,5 +23,7 @@ namespace Memoraide_API.Models
         }
 
         public DbSet<Card> Card { get; set; }
+
+        public DbSet<Deck> Deck { get; set; }
     }
 }
