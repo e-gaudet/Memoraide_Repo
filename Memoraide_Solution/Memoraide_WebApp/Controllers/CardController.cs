@@ -67,10 +67,10 @@ namespace Memoraide_WebApp.Controllers
                 List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
 
                 //if (model.Question == null)
-               // {
-               //     model.Question = "test";
-               //     model.Answer = "test";
-               // }
+                // {
+                //     model.Question = "test";
+                //     model.Answer = "test";
+                // }
                 return View(model);
             }
             else
@@ -80,7 +80,7 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
-        [HttpGet]
+        //[HttpGet] //This needs to go for routing a post!
         public async Task<IActionResult> ViewCardDetail(int? id)
         {
             string url = "https://localhost:44356/Cards/" + id;
@@ -107,8 +107,12 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditCard([Bind("ID")] int id, [Bind("ID,Question,Answer,CardTags,DeckId")] CardViewModel model)
+        //RENAMED from EditCard. viewCardDetail's post will handle the edit. none of the code was changed my me.
+        //[HttpPut, Route("{id,:int}")]
+        //[HttpPut]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewCardDetail([Bind("ID")] int id, [Bind("ID,Question,Answer,CardTags,DeckId")] CardViewModel model)
         {
             if (ModelState.IsValid)
             {
