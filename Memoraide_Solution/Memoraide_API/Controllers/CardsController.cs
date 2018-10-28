@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Memoraide_API.Models;
+using System.Collections.Generic;
 
 namespace Memoraide_API.Controllers
 {
@@ -51,6 +52,41 @@ namespace Memoraide_API.Controllers
             }
 
             return Ok(card);
+        }
+
+        // GET: /Cards/Tag 5,Tag 2
+        [HttpGet("search/{tags}")]
+        public async Task<IActionResult> GetCard([FromRoute] string tags)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string query = "SELECT c.* FROM Cards c INNER JOIN CardTags ct ON c.Id = ct.CardId WHERE";
+            List<string> tagsList = tags.Split(',').ToList<string>(); ;
+
+
+            foreach (string tag in tagsList)
+            {
+                if (tag == tagsList[0])
+                    query += " ct.Tag = '" + tag + "'";
+                else
+                    query += " OR ct.Tag = '" + tag + "'";
+            }
+
+            if (tagsList.Count() > 1)
+            {
+                query += " GROUP BY c.Id, c.DeckId, c.Question, c.Answer, c.DateCreated, c.DateDeleted, c.IsDeleted HAVING Count(c.Id) > 1";
+            }
+
+            var cards = _context.Card.FromSql(query);
+            if (cards == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cards);
         }
 
         // PUT: /Cards/card
