@@ -11,9 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Card\GetAllData_Test.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Views\Card\ViewCard.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

@@ -75,19 +75,75 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditDeck([Bind("ID")] int id, [Bind("ID,DeckName")] DeckViewModel model)
+        //[HttpPut]
+        //public async Task<IActionResult> EditDeck([Bind("ID")] int id, [Bind("ID,DeckName")] DeckViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        string url = "https://localhost:44356/Decks/" + id;
+
+        //        var response = await client.PutAsJsonAsync(url, model);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            TempData["message"] = model.Name + " updated.";
+        //            return View("ViewDeck", model);
+        //        }
+        //        else
+        //        {
+        //            TempData["message"] = "Updating deck " + model.Name + " was unsuccessful.";
+        //            TempData["edit"] = true;
+        //            return NoContent();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        TempData["edit"] = true;
+        //        return NoContent();
+        //    }
+        //}
+
+
+        //[HttpGet] //This needs to go for routing a post!
+        public async Task<IActionResult> ViewDeckDetail(int? id)
         {
+
+            string url = "https://localhost:44356/DEcks/" + id;
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                DeckViewModel model = JsonConvert.DeserializeObject<DeckViewModel>(jsonstring.Result);
+                return View(model);
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab card data";
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewDeckDetail([Bind("ID")] int id, [Bind("ID", "Name", "UserId")] DeckViewModel model)
+        {
+
             if (ModelState.IsValid)
             {
                 string url = "https://localhost:44356/Decks/" + id;
 
-                var response = await client.PutAsJsonAsync(url, model);
+                //if no {get; set;} on model ID, this is needed.
+                model.ID = id;
 
+                var response = await client.PutAsJsonAsync(url, model);
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["message"] = model.Name + " updated.";
-                    return View("ViewDeck", model);
+
+                    return NoContent();
                 }
                 else
                 {
