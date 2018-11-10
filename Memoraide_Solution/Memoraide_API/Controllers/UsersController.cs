@@ -38,6 +38,27 @@ namespace Memoraide_API.Controllers
             return Ok(user);
         }
 
+        // PUT: /Users/user
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spUpdateUser {0}, {1}, {2}, {3}, {4}", id, user.FirstName, user.LastName, user.Username, user.EmailAddress);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
         // POST: /Users
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] User user)
