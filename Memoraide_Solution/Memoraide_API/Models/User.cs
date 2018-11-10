@@ -10,7 +10,7 @@ namespace Memoraide_API.Models
         public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string EmailAddress { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
         public DateTime? DateCreated { get; set; }
         public Boolean? IsBanned { get; set; }

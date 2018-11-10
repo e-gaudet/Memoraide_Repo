@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Memoraide_API.Models;
-using System.Collections.Generic;
-using System.Security;
 using System;
 
 namespace Memoraide_API.Controllers
@@ -38,6 +35,24 @@ namespace Memoraide_API.Controllers
             return Ok(user);
         }
 
+        // GET/Users/5
+        [HttpGet("{id}")]   
+        public async Task<IActionResult> GetUser([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = _context.User.FromSql("EXEC dbo.spGetUser {0}", id);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         // PUT: /Users/user
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
@@ -49,7 +64,7 @@ namespace Memoraide_API.Controllers
 
             try
             {
-                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spUpdateUser {0}, {1}, {2}, {3}, {4}", id, user.FirstName, user.LastName, user.Username, user.EmailAddress);
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spUpdateUser {0}, {1}, {2}, {3}, {4}", id, user.FirstName, user.LastName, user.Username, user.Email);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -70,9 +85,9 @@ namespace Memoraide_API.Controllers
 
             byte[] data = System.Text.Encoding.ASCII.GetBytes(user.Password);
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
-            String hashPassword = System.Text.Encoding.ASCII.GetString(data);
+            string hashPassword = System.Text.Encoding.ASCII.GetString(data);
 
-            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddUser {0}, {1}, {2}, {3}, {4}", user.FirstName, user.LastName, user.Username, user.EmailAddress, hashPassword);
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddUser {0}, {1}, {2}, {3}, {4}", user.FirstName, user.LastName, user.Username, user.Email, hashPassword);
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
