@@ -25,5 +25,7 @@ namespace Memoraide_API.Models
         public DbSet<Card> Card { get; set; }
 
         public DbSet<Deck> Deck { get; set; }
+
+        public DbSet<User> User { get; set; }
     }
 }
