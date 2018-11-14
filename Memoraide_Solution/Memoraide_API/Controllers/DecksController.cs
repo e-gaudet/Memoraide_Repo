@@ -113,6 +113,20 @@ namespace Memoraide_API.Controllers
             return Ok(deck);
         }
 
+        //POST: /Decks/1;1
+        [HttpPost("{userid};{deckid}")]
+        public async Task<IActionResult> PostSubscribeToDeck([FromRoute] int userid, [FromRoute] int deckid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spSubscribeToDeck {0}, {1}", userid, deckid);
+
+            return NoContent();
+        }
+
         private bool DeckExists(int id)
         {
             return _context.Deck.Any(e => e.Id == id);
