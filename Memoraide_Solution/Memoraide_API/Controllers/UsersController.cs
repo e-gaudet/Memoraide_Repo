@@ -91,5 +91,26 @@ namespace Memoraide_API.Controllers
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
+
+        // PUT: /Users/ban/user
+        [HttpPut("ban/{id}")]
+        public async Task<IActionResult> PutUserBan([FromRoute] int id, [FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spBanUser {0}", id);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }
