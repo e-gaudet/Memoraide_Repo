@@ -126,6 +126,22 @@ namespace Memoraide_API.Controllers
             return CreatedAtAction("GetCard", new { id = card.Id }, card);
         }
 
+        //POST: /Cards/1
+        [HttpPost("{cardId}")]
+        public async Task<IActionResult> PostCardTag([FromRoute] int cardId, [FromBody] string tag)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            string[] tags = tag.Split(';');
+
+            foreach(var t in tags)
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardTag {0}, {1}", cardId, t);
+
+            return Ok();
+        }
+
         // DELETE: /Cards/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCard([FromRoute] int id)
