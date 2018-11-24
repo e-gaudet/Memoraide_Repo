@@ -162,6 +162,20 @@ namespace Memoraide_API.Controllers
             return Ok(card);
         }
 
+        // POST: /Cards/rating/1
+        [HttpPost("rating/{id}")]
+        public async Task<IActionResult> PostCardRating([FromRoute] int id, [FromBody] int rating)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardRating {0}, {1}", id, rating);
+
+            return Ok();
+        }
+
         private bool CardExists(int id)
         {
             return _context.Card.Any(e => e.Id == id);

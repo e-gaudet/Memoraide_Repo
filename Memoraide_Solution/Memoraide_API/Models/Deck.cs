@@ -15,5 +15,6 @@ namespace Memoraide_API.Models
         public DateTime? DateCreated { get; set; }
         public Boolean? IsDeleted { get; set; }
         public DateTime? DateDeleted { get; set; }
+        public Decimal Rating { get; set; }
     }
 }

@@ -127,6 +127,20 @@ namespace Memoraide_API.Controllers
             return NoContent();
         }
 
+        // POST: /Decks/rating/1
+        [HttpPost("rating/{id}")]
+        public async Task<IActionResult> PostDeckRating([FromRoute] int id, [FromBody] int rating)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddDeckRating {0}, {1}", id, rating);
+
+            return Ok();
+        }
+
         private bool DeckExists(int id)
         {
             return _context.Deck.Any(e => e.Id == id);
