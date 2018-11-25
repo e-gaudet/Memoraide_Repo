@@ -36,7 +36,7 @@ namespace Memoraide_API.Controllers
         }
 
         // GET/Users/5
-        [HttpGet("{id}")]   
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace Memoraide_API.Controllers
             }
 
             var user = _context.User.FromSql("EXEC dbo.spGetUser {0}", id);
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
@@ -90,6 +90,20 @@ namespace Memoraide_API.Controllers
             await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddUser {0}, {1}, {2}, {3}, {4}", user.FirstName, user.LastName, user.Username, user.Email, hashPassword);
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
+        }
+
+        // POST: /Users/Answer
+        [HttpPost("Answer")]
+        public async Task<IActionResult> PostAnswer([FromBody] CardAnswer carda)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardAnswer {0}, {1}, {2}, {3}", carda.UserId, carda.DeckId, carda.CorrectAnswer, carda.NextReviewDate);
+
+            return CreatedAtAction("GetCardAnswer", new { id = carda.Id }, carda);
         }
 
         // PUT: /Users/ban/user
