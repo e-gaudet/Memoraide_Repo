@@ -8,7 +8,7 @@ namespace Memoraide_API.Models
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int DeckId { get; set; }
+        public int CardId { get; set; }
         public bool CorrectAnswer { get; set; }
         public DateTime NextReviewDate { get; set; }
         public DateTime? DateAnswered { get; set; }

@@ -101,7 +101,7 @@ namespace Memoraide_API.Controllers
                 return BadRequest(ModelState);
             }
             
-            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardAnswer {0}, {1}, {2}, {3}", carda.UserId, carda.DeckId, carda.CorrectAnswer, carda.NextReviewDate);
+            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardAnswer {0}, {1}, {2}, {3}", carda.UserId, carda.CardId, carda.CorrectAnswer, carda.NextReviewDate);
 
             return CreatedAtAction("GetCardAnswer", new { id = carda.Id }, carda);
         }
