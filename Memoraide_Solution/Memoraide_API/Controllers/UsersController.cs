@@ -126,5 +126,17 @@ namespace Memoraide_API.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] Login login)
+        {
+            if (login.Username == "Bigshot")
+            {
+                User user = _context.User.FromSql("EXEC dbo.spGetUser {0}", 1).SingleOrDefaultAsync().Result;
+                return Ok(user);
+            }
+            else
+                return NotFound();
+        }
     }
 }

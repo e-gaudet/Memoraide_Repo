@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Memoraide_WebApp.Controllers
 {
+    [Authorize]
     public class CardController : Controller
     {
         HttpClient client;

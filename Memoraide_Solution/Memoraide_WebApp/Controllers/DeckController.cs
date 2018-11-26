@@ -7,8 +7,11 @@ using Memoraide_WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Memoraide_WebApp.Controllers
 {
+    [Authorize]
     public class DeckController : Controller
     {
         HttpClient client;
