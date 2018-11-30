@@ -130,13 +130,20 @@ namespace Memoraide_API.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] Login login)
         {
-            if (login.Username == "Bigshot")
+            User user = _context.User.FromSql("EXEC dbo.spGetUserByUsername {0}", login.Username).SingleOrDefaultAsync().Result;
+
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(login.Password);
+            data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+            string hashPassword = System.Text.Encoding.ASCII.GetString(data);
+
+            if(hashPassword.Equals(user.Password))
             {
-                User user = _context.User.FromSql("EXEC dbo.spGetUser {0}", 1).SingleOrDefaultAsync().Result;
                 return Ok(user);
             }
             else
+            {
                 return NotFound();
+            }
         }
     }
 }
