@@ -80,7 +80,7 @@ namespace Memoraide_API.Controllers
                 query += " GROUP BY c.Id, c.DeckId, c.Question, c.Answer, c.DateCreated, c.DateDeleted, c.IsDeleted, c.Rating HAVING Count(c.Id) >= 1";
             }
 
-            var cards = _context.Card.FromSql("{0}", query);
+            var cards = _context.Card.FromSql(query);
             if (cards == null)
             {
                 return NotFound();
