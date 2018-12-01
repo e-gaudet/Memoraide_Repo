@@ -1,0 +1,76 @@
+﻿@model List<CardViewModel>
+@{
+    ViewData["Title"] = "Search";
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Search Results</h2>
+
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].DeckId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Question)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Answer)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].CardTags)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var card in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelCard => card.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelCard => card.DeckId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelCard => card.Question)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelCard => card.Answer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelCard => card.CardTags)
+                    </td>
+                    <!--Links-->
+                    <td>
+                        @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                        <a asp-action="ViewCardDetail" asp-route-id="@card.ID">Details</a> @*|
+                            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert">
+        ALERT: No cards could be found!
+    </div>
+}
+
+
+

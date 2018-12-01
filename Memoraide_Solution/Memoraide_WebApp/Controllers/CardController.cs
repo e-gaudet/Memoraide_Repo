@@ -35,17 +35,18 @@ namespace Memoraide_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Question,Answer,DeckId")] CardViewModel model)
+        public async Task<IActionResult> Create([Bind("Question,Answer,DeckId,CardTags")] CardViewModel model)
         {
             if (ModelState.IsValid)
             {
-                string url = "https://localhost:44356/Cards/";
+                string url = "https://localhost:44356/Cards/Create/" + model.CardTags; 
 
                 var response = await client.PostAsJsonAsync(url, model);
 
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["message"] = "Successfully added " + model.Answer + " to " + "tempdeckname";
+                    url = "https://localhost:44356/Cards/";
                     return RedirectToAction("Create");
                 }
                 else
@@ -58,6 +59,34 @@ namespace Memoraide_WebApp.Controllers
             {
                 return View(model);
             }
+        }
+
+
+        public async Task<IActionResult> Search([Bind("SearchTerm")] CardViewModel model)
+        {
+            if (model.SearchTerm != "" && model.SearchTerm != null)
+            {
+                string url = "https://localhost:44356/Cards/Search/" + model.SearchTerm;
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonstring = response.Content.ReadAsStringAsync();
+                    jsonstring.Wait();
+                    List<CardViewModel> lmodel = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
+                    return View("SearchCard", lmodel);
+                }
+                else
+                {
+                    TempData["message"] = "Unable to grab card data";
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return View(model);
+            }
+
         }
 
 

@@ -14,14 +14,14 @@
 
 <form asp-controller="Card" asp-action="Create" method="post">
     <div class="form-horizontal">
-        <!--<input type="hidden" asp-for="DeckId" value="1" /><!--<Temporary until decks are finished-->     
+        <!--<input type="hidden" asp-for="DeckId" value="1" /><!--<Temporary until decks are finished-->
         <br />
         @Html.LabelFor(m => m.decks)
         @Html.DropDownListFor(m => m.DeckId,
                                 Model.decks,
                                 "Select a deck",
                                 new { @class = "form-control"})
-        
+
         <br />
         <label asp-for="Question"></label><br />
         <textarea asp-for="Question"></textarea><br />
@@ -29,8 +29,11 @@
         <label asp-for="Answer"></label>:<br />
         <textarea asp-for="Answer"></textarea><br />
         <span asp-validation-for="Answer"></span><br />
-        <!---<label asp-for="CardTags"></label>: <input asp-for="CardTags" /><br />--->
-        <!--<span asp-validation-for="CardTags"></span>-->
+        <label asp-for="CardTags"></label>: <input asp-for="CardTags" /><br />
+        <span asp-validation-for="CardTags"></span>
         <button type="submit">Add Card</button><button type="reset" onclick="return confirm('Clear card?');">Clear Card</button>
     </div>
 </form>
+
+
+
