@@ -77,7 +77,7 @@ namespace Memoraide_API.Controllers
 
             if (tagsList.Count() > 1)
             {
-                query += " GROUP BY c.Id, c.DeckId, c.Question, c.Answer, c.DateCreated, c.DateDeleted, c.IsDeleted HAVING Count(c.Id) > 1";
+                query += " GROUP BY c.Id, c.DeckId, c.Question, c.Answer, c.DateCreated, c.DateDeleted, c.IsDeleted, c.Rating HAVING Count(c.Id) >= 1";
             }
 
             var cards = _context.Card.FromSql("{0}", query);
