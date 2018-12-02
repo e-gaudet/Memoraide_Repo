@@ -1,4 +1,4 @@
-﻿
+﻿@model List<DeckViewModel>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,5 +6,45 @@
 <h2>Index</h2>
 
 @*<a asp-page="./EditReport" asp-route-id="@report.IntegrityReportId" class="btn btn-default"><i class="fa fa-edit"></i></a>*@
+
+<br/>
+
+@if (Model.Count() > 0)
+{
+    <h3>My Decks</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Name)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var deck in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelDeck => deck.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelDeck => deck.Name)
+                    </td>
+                    <!--Links-->
+                    <td>
+                        @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                        <a asp-action="ViewDeckDetail" asp-route-id="@deck.ID">Details</a> @*|
+                            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 <a asp-controller="Deck" asp-action="Create" class="btn btn-default">Create New Deck</a>
 <a asp-controller="Deck" asp-action="ViewDeck" class="btn btn-default">View Decks</a>
