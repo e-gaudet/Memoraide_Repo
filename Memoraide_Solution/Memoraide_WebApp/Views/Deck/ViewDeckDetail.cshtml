@@ -4,8 +4,6 @@
 }
 
 
-
-
 <h2>Deck Details</h2>
 
 <h4>To edit the deck information, enter new data into Deck name.</h4>
@@ -30,6 +28,7 @@
     <div class="col-md-4">       
         <form asp-controller="Deck" asp-action="ViewDeckDetail">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="isSubbed" hidden />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -49,7 +48,14 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Edit" class="btn btn-default" />
-                <button asp-controller="Deck" asp-action="SubscribeToDeck" class="btn btn-default">Subscribe</button>
+                @if (Model.isSubbed)
+                {
+                    <button asp-controller="Deck" asp-action="UnsubscribeFromDeck" class="btn btn-default">Unsubscribe</button>
+                }
+                else
+                {
+                    <button asp-controller="Deck" asp-action="SubscribeToDeck" class="btn btn-default">Subscribe</button>
+                }
             </div>
         </form>
     </div>

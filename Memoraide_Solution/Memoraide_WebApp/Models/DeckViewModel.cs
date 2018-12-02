@@ -19,5 +19,7 @@ namespace Memoraide_WebApp.Models
         public DateTime? DateCreated { get; set; }
         public bool? isDeleted { get; set; }
         public DateTime? DateDeleted { get; set; }
+
+        public bool isSubbed { get; set; }
     }
 }

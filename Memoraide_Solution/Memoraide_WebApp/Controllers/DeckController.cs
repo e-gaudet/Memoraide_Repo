@@ -132,6 +132,22 @@ namespace Memoraide_WebApp.Controllers
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
                 DeckViewModel model = JsonConvert.DeserializeObject<DeckViewModel>(jsonstring.Result);
+
+                string url2 = "https://localhost:44356/Decks/issubbed/" + User.FindFirstValue("UserId") + ";" + model.ID;
+                var response2 = await client.GetAsync(url2);
+
+                if (response2.IsSuccessStatusCode)
+                {
+                    var jsonstring2 = response2.Content.ReadAsStringAsync();
+                    jsonstring2.Wait();
+                    bool exists = JsonConvert.DeserializeObject<bool>(jsonstring2.Result);
+
+                    model.isSubbed = exists;
+                }
+                else
+                {
+                    model.isSubbed = false;
+                }
                 return View(model);
             }
             else
@@ -204,7 +220,7 @@ namespace Memoraide_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ViewDeckDetail([Bind("ID")] int id, [Bind("ID", "Name", "UserId")] DeckViewModel model)
+        public async Task<IActionResult> ViewDeckDetail([Bind("ID")] int id, [Bind("ID", "Name", "UserId", "isSubbed")] DeckViewModel model)
         {
 
             if (ModelState.IsValid)
@@ -219,25 +235,25 @@ namespace Memoraide_WebApp.Controllers
                 {
                     TempData["message"] = model.Name + " updated.";
 
-                    return NoContent();
+                    return View(model);
                 }
                 else
                 {
                     TempData["message"] = "Updating deck " + model.Name + " was unsuccessful.";
                     TempData["edit"] = true;
-                    return NoContent();
+                    return View(model);
                 }
             }
             else
             {
                 TempData["edit"] = true;
-                return NoContent();
+                return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubscribeToDeck(int id, [Bind("ID", "Name", "UserId")] DeckViewModel model)
+        public async Task<IActionResult> SubscribeToDeck(int id, [Bind("ID", "Name", "UserId", "isSubbed")] DeckViewModel model)
         {
             string url = "https://localhost:44356/Decks/" + User.FindFirst("UserId").Value + ";" + id;
 
@@ -246,7 +262,7 @@ namespace Memoraide_WebApp.Controllers
             if (response.IsSuccessStatusCode)
             {
                 TempData["message"] = String.Format("User \"{0}\" Subscribed to deck \"{1}\"", User.FindFirst(ClaimTypes.Name).Value, model.Name);
-
+                model.isSubbed = true;
                 return View("ViewDeckDetail", model);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -257,6 +273,32 @@ namespace Memoraide_WebApp.Controllers
             else
             {
                 TempData["message"] = "Issue subscribing to deck";
+                return View("ViewDeckDetail", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnsubscribeFromDeck(int id, [Bind("ID", "Name", "UserId", "isSubbed")] DeckViewModel model)
+        {
+            string url = "https://localhost:44356/Decks/UserDecks/" + User.FindFirst("UserId").Value + ";" + id;
+
+            var response = await client.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["message"] = String.Format("User \"{0}\" Unsubscribed from deck \"{1}\"", User.FindFirst(ClaimTypes.Name).Value, model.Name);
+                model.isSubbed = false;
+                return View("ViewDeckDetail", model);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["message"] = "User is not subscribed"; //TODO: Make this check bad request properly
+                return View("ViewDeckDetail", model);
+            }
+            else
+            {
+                TempData["message"] = "Issue unsubscribing from deck";
                 return View("ViewDeckDetail", model);
             }
         }

@@ -58,6 +58,20 @@ namespace Memoraide_API.Controllers
             return Ok(deck);
         }
 
+        [HttpGet("issubbed/{userid};{deckid}")]
+        public async Task<IActionResult> IsSubbed([FromRoute] int userId, [FromRoute] int deckId)
+        {
+            bool exists;
+            using (SqlConnection connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
+            {
+                SqlCommand command = new SqlCommand(String.Format("select count(*) from dbo.userdecks where userid = {0} and deckid = {1}", userId, deckId), connection);
+                connection.Open();
+                exists = (int)command.ExecuteScalar() != 0;
+            }
+
+            return Ok(exists);
+        }
+
         // PUT: /Decks/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDeck([FromRoute] int id, [FromBody] Deck deck)
