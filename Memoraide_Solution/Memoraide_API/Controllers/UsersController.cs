@@ -164,13 +164,13 @@ namespace Memoraide_API.Controllers
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
             string hashPassword = System.Text.Encoding.ASCII.GetString(data);
 
-            if(hashPassword.Equals(user.Password))
+            if(user != null && hashPassword.Equals(user.Password))
             {
                 return Ok(user);
             }
             else
             {
-                return NotFound();
+                return Unauthorized();
             }
         }
 

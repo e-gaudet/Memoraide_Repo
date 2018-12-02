@@ -67,7 +67,12 @@ namespace Memoraide_WebApp.Controllers
                 jsonstring.Wait();
                 user = JsonConvert.DeserializeObject<UserViewModel>(jsonstring.Result);
             }
-            else
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid Username or Password");
+                return View(model);
+            }
+            else 
             {
                 ModelState.AddModelError(string.Empty, "Server error");
                 return View(model);
