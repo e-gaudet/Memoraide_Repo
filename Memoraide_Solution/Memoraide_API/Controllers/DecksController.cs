@@ -191,6 +191,22 @@ namespace Memoraide_API.Controllers
             }
         }
 
+        [HttpGet("Cards/{deckid}")]
+        public async Task<IActionResult> GetCardsByDeckId([FromRoute] int deckid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var cards = _context.Card.FromSql("SELECT * FROM dbo.Cards WHERE DeckId = {0}", deckid);
+
+            if (cards == null)
+                return NotFound();
+
+            return Ok(cards);
+        }
+
 
         [HttpDelete("UserDecks/{userid};{deckid}")]
         public async Task<IActionResult> DeleteUserDeck([FromRoute] int userid, [FromRoute] int deckid)
