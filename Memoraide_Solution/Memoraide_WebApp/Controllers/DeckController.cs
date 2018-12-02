@@ -127,7 +127,68 @@ namespace Memoraide_WebApp.Controllers
                 TempData["message"] = "Unable to grab card data";
                 return NotFound();
             }
+
+
         }
+
+        //todo: non-retarded way of getting all cards in deck.
+        public async Task<IActionResult> ReviewDeck(int? deckid)
+        {
+            return View();
+            // return View("testing");
+
+            //testing to get to other page.
+            string url = "https://localhost:44356/DEcks/" + deckid;
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                DeckViewModel model = JsonConvert.DeserializeObject<DeckViewModel>(jsonstring.Result);
+                return View(model);
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab card data";
+                return NotFound();
+            }
+
+
+
+
+            return NotFound();
+        }
+
+        //testing: jump to deck detail outside of the deck page.
+        //[HttpGet]
+        //public async Task<IActionResult> ViewDeck_JumpToDetail(int? id)
+        //{
+        //    string url = "https://localhost:44356/Decks/";
+
+        //    var response = await client.GetAsync(url);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var jsonstring = response.Content.ReadAsStringAsync();
+        //        jsonstring.Wait();
+        //        List<DeckViewModel> model = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+
+        //        if (model[0].Name == null)
+        //        {
+        //            model[0].Name = "test";
+        //        }
+        //        await ViewDeckDetail(id);
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        TempData["message"] = "Unable to grab deck data";
+        //        return NotFound();
+        //    }
+        //}
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

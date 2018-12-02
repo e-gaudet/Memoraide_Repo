@@ -4,9 +4,9 @@
 
 }
 
-@section Scripts{
+@*@section Scripts{
     <script type="text/javascript" src="@Url.Content("/js/Card/ViewCard.js")"></script>
-}
+}*@
 
 @if (TempData["message"] != null)
 {
@@ -21,6 +21,29 @@
         ToggleEdit();
     </script>
 }
+
+<script> 
+    $(function () {
+        $('.answer').click(function () {
+            var $answer = $(this);
+        })
+    })
+    function ShowAnswer(div_id) {
+        if (!div_id) {
+            return false;
+        }
+        else {
+            var div = document.getElementById(div_id);
+            if (div.style.display !== "none") {
+                div.style.display = "none";
+            }
+            else {
+                div.style.display = "block";
+            }
+        }
+    }
+</script>
+
 
 <h2>View Card</h2>
 @if (Model.Count() > 0)
@@ -59,6 +82,10 @@
                     @Html.DisplayFor(modelCard => card.Question)
                 </td>
                 <td>
+                    <button class="answer" data-answer-id="@card.ID" data-answer-info="@card.Answer" onclick="ShowAnswer(@card.ID)">Show / Hide Answer</button>
+                    @*@Html.DisplayFor(modelCard => card.Answer)*@
+                </td>
+                <td id="@card.ID" style="display:none;">
                     @Html.DisplayFor(modelCard => card.Answer)
                 </td>
                 <td>
@@ -68,7 +95,7 @@
                 <td>
                     @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
                     <a asp-action="ViewCardDetail" asp-route-id="@card.ID">Details</a> @*|
-                    <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
                 </td>
 
             </tr>

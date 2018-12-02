@@ -233,5 +233,37 @@ namespace Memoraide_WebApp.Controllers
                 return NoContent();
             }
         }
+
+        ////testing.
+        //[HttpGet]
+        //public async Task<IActionResult> Testing(int deckid)
+        //{
+
+        //    string url = "https://localhost:44356/Decks/";
+
+        //    var response = await client.GetAsync(url);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var jsonstring = response.Content.ReadAsStringAsync();
+        //        jsonstring.Wait();
+        //        List<DeckViewModel> model = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+
+        //        if (model[0].Name == null)
+        //        {
+        //            model[0].Name = "test";
+        //        }
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        TempData["message"] = "Unable to grab deck data";
+        //        return NotFound();
+        //    }
+
+        //    int _deckid = deckid;
+        //    Console.WriteLine("testing");
+        //}
+
     }
 }

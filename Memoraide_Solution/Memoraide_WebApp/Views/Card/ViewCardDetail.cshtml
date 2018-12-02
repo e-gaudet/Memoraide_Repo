@@ -56,6 +56,16 @@
                 <label asp-for="DateCreated" class="control-label"></label>
                 <input asp-for="DateCreated" class="form-control" readonly="@(true)" />
             </div>
+
+            <div class="form-group">
+                @if (@Model.DeckId != 0)
+                {
+                    <label>Card Belongs to a deck. </label>
+                    <a asp-controller="Deck" asp-action="ViewDeckDetail" asp-route-id="@Model.DeckId" class="btn btn-default">Click to view deck data.</a>
+                    @*<a asp-action="ViewDeckDetail" asp-route-id="@deck.ID">View parent deck</a>*@
+                }
+
+            </div>
             @*<div class="form-group">
                     <label asp-for="isDeleted" class="control-label"></label>
                     <input asp-for="isDeleted" class="form-control" />

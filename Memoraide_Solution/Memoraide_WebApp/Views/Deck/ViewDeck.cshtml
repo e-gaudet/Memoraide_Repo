@@ -42,24 +42,30 @@
         <tbody>
             @foreach (var deck in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelDeck => deck.ID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelDeck => deck.UserId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelDeck => deck.Name)
-                    </td>                    
-                    <!--Links-->
-                    <td>
-                        @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
-                        <a asp-action="ViewDeckDetail" asp-route-id="@deck.ID">Details</a> @*|
-                            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
-                    </td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelDeck => deck.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelDeck => deck.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelDeck => deck.Name)
+                </td>
+                <!--Links-->
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                    <a asp-action="ViewDeckDetail" asp-route-id="@deck.ID">Details</a> @*|
+            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                </td>
 
-                </tr>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                    <a asp-action="ReviewDeck" asp-route-deckid="@deck.ID">Review Deck</a> @*|
+            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                </td>
+
+            </tr>
             }
         </tbody>
     </table>
