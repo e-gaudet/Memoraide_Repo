@@ -134,7 +134,7 @@ namespace Memoraide_API.Controllers
 
                 if (!exists)
                 {
-                    await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spSubscribeToDeck {0}, {1}", userid, deckid);
+                    await _context.Database.ExecuteSqlCommandAsync("INSERT INTO dbo.UserDecks (UserId, DeckId) VALUES ({0}, {1})", userid, deckid);
                     return Ok();
                 }
                 else
@@ -189,6 +189,20 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest();
             }
+        }
+
+
+        [HttpDelete("UserDecks/{userid};{deckid}")]
+        public async Task<IActionResult> DeleteUserDeck([FromRoute] int userid, [FromRoute] int deckid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _context.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.UserDecks WHERE UserId = {0} AND DeckId = {1}", userid, deckid);
+
+            return Ok();
         }
     }
 }
