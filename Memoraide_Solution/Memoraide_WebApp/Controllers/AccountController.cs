@@ -29,6 +29,11 @@ namespace Memoraide_WebApp.Controllers
             client = new HttpClient();
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [TempData]
         public string ErrorMessage { get; set; }
 
@@ -53,14 +58,14 @@ namespace Memoraide_WebApp.Controllers
                 return View(model);
 
             string url = "https://localhost:44356/users/Authenticate";
-            User user = null;
+            UserViewModel user = null;
 
             var response = await client.PostAsJsonAsync(url, model);
             if (response.IsSuccessStatusCode)
             {
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
-                user = JsonConvert.DeserializeObject<User>(jsonstring.Result);
+                user = JsonConvert.DeserializeObject<UserViewModel>(jsonstring.Result);
             }
             else
             {
@@ -100,6 +105,49 @@ namespace Memoraide_WebApp.Controllers
         public IActionResult PleaseLogin()
         {
             return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ViewUser()
+        {
+            string url = "https://localhost:44356/Users/";
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+               
+                List<UserViewModel> uvm = JsonConvert.DeserializeObject<List<UserViewModel>>(jsonstring.Result);
+                return View(uvm);
+            }
+            else
+            {
+                TempData["message"] = "Unable to user card data";
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewUserDecks(int? id)
+        {
+            string url = "https://localhost:44356/Users/Decks/" + id;
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                List<DeckViewModel> decks = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+                return View(decks);
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab Deck data";
+                return NotFound();
+            }
         }
     }
 }

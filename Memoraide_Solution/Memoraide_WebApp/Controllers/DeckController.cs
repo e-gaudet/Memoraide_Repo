@@ -107,11 +107,10 @@ namespace Memoraide_WebApp.Controllers
         //}
 
 
-        //[HttpGet] //This needs to go for routing a post!
         public async Task<IActionResult> ViewDeckDetail(int? id)
         {
 
-            string url = "https://localhost:44356/DEcks/" + id;
+            string url = "https://localhost:44356/Decks/" + id;
 
             var response = await client.GetAsync(url);
 

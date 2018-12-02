@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Memoraide_WebApp.Models
 {
-    public class User
+    public class UserViewModel
     {
         public int Id { get; set; }
         public string Username { get; set; }

@@ -1,0 +1,62 @@
+﻿@model List<DeckViewModel>
+@{
+    ViewData["Title"] = "View Deck";
+
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+
+<h2>View Decks</h2>
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].UserId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Name)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var deck in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelDeck => deck.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelDeck => deck.UserId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelDeck => deck.Name)
+                    </td>
+                    <!--Links-->
+                    <td>
+                       
+                        @*<a asp-action="ViewUserDeckDetail" asp-route-id="@deck.ID">Details</a>*@
+                            
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert">
+        ALERT: No decks could be found!
+    </div>
+}
