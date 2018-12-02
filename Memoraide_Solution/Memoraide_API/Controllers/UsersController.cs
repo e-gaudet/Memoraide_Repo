@@ -173,5 +173,30 @@ namespace Memoraide_API.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] Register register)
+        {
+            User user = _context.User.FromSql("EXEC dbo.spGetUserByUsername {0}", register.Username).SingleOrDefaultAsync().Result;
+
+            if (user != null)
+            {
+                return Ok(new RegisterResponse { success = false, errorcode = 1, errormessage = "User Already Exists" });
+            }
+            try
+            {
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(register.Password);
+                data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+                string hashPassword = System.Text.Encoding.ASCII.GetString(data);
+
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddUser {0}, {1}, {2}, {3}, {4}", "", "", register.Username, "", hashPassword);
+
+                return Ok(new RegisterResponse { success = true});
+            }
+            catch
+            {
+                return Ok(new RegisterResponse { success = false, errorcode = -1, errormessage = "Unexpected exception" });
+            }
+        }
     }
 }
