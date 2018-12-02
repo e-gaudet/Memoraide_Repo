@@ -43,17 +43,20 @@ namespace Memoraide_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,UserId")] DeckViewModel model)
+        public async Task<IActionResult> Create([Bind("Name")] DeckViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var userId = User.FindFirst("UserId").Value;
+                int id = Convert.ToInt32(userId);
+                model.UserId = id;
                 string url = "https://localhost:44356/Decks/";
 
                 var response = await client.PostAsJsonAsync(url, model);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = "Successfully created " +  model.Name;
+                    TempData["message"] = "Successfully created " + model.Name;
                     return RedirectToAction("Create");
                 }
                 else
@@ -152,7 +155,7 @@ namespace Memoraide_WebApp.Controllers
             }
             else
             {
-                TempData["message"] = "Unable to grab card data";
+                TempData["message"] = "Unable to grab deck data";
                 return NotFound();
             }
 

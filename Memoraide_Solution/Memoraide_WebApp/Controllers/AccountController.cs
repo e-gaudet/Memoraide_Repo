@@ -196,7 +196,7 @@ namespace Memoraide_WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewUserDecks(int? id)
         {
-            string url = "https://localhost:44356/Users/Decks/" + id;
+            string url = "https://localhost:44356/Decks/UserDecks/" + id;
             var response = await client.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
@@ -210,6 +210,48 @@ namespace Memoraide_WebApp.Controllers
             {
                 TempData["message"] = "Unable to grab Deck data";
                 return NotFound();
+            }
+        }
+
+        public async Task<IActionResult> ViewUserDecksDetail(int? id)
+        {
+
+            string url = "https://localhost:44356/Decks/" + id;
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                DeckViewModel model = JsonConvert.DeserializeObject<DeckViewModel>(jsonstring.Result);
+                return View(model);
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab deck data";
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CopyUserDeck([Bind("ID")] int ID)
+        {
+            var userId = User.FindFirst("UserId").Value;
+            string url = "https://localhost:44356/Decks/" + userId + ";" + ID;
+            
+
+            var response = await client.PostAsJsonAsync(url, ID);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["message"] = "Successfully copied deck";
+                return View("Index");
+            }
+            else
+            {
+                TempData["message"] = "Unabe to copy deck";
+                return View("Index");
             }
         }
     }

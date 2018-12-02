@@ -1,0 +1,66 @@
+﻿@model DeckViewModel
+@{
+    ViewData["Title"] = "Deck Details";
+}
+
+
+
+
+
+<h2>Deck Details</h2>
+
+<h4>To copy the deck into your own deck list, press the copy button.</h4>
+<hr />
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["edit"] != null)
+{
+    <script>
+        ToggleEdit();
+    </script>
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Account" asp-action="CopyUserDeck">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" readonly="@(true)" />
+                <span asp-validation-for="Name" class="text-danger" readonly="@(true)"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ID" class="control-label"></label>
+                <input asp-for="ID" class="form-control" readonly="@(true)" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" readonly="@(true)" />
+            </div>
+            <div class="form-group">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input asp-for="DateCreated" class="form-control" readonly="@(true)" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Copy Deck to your list" class="btn btn-default" />
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ViewDeck">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

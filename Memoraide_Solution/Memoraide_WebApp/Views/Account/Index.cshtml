@@ -3,6 +3,13 @@
     ViewData["Title"] = "Index";
 }
 
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
 <h2>Index</h2>
 
 @*<a asp-page="./EditReport" asp-route-id="@report.IntegrityReportId" class="btn btn-default"><i class="fa fa-edit"></i></a>*@
