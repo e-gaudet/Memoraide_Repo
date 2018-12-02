@@ -29,6 +29,11 @@ namespace Memoraide_WebApp.Controllers
             client = new HttpClient();
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [TempData]
         public string ErrorMessage { get; set; }
 
@@ -53,16 +58,21 @@ namespace Memoraide_WebApp.Controllers
                 return View(model);
 
             string url = "https://localhost:44356/users/Authenticate";
-            User user = null;
+            UserViewModel user = null;
 
             var response = await client.PostAsJsonAsync(url, model);
             if (response.IsSuccessStatusCode)
             {
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
-                user = JsonConvert.DeserializeObject<User>(jsonstring.Result);
+                user = JsonConvert.DeserializeObject<UserViewModel>(jsonstring.Result);
             }
-            else
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid Username or Password");
+                return View(model);
+            }
+            else 
             {
                 ModelState.AddModelError(string.Empty, "Server error");
                 return View(model);
@@ -77,7 +87,8 @@ namespace Memoraide_WebApp.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim("FullName", user.FirstName + " " + user.LastName)
+                new Claim("FullName", user.FirstName + " " + user.LastName),
+                new Claim("UserID", user.Id.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(
@@ -92,7 +103,64 @@ namespace Memoraide_WebApp.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            return Redirect(returnUrl);
+            if (returnUrl != null)
+                return Redirect(returnUrl);
+            else
+                return Redirect("/Home/Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Redirect("/Home/Index");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(string returnUrl = null)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            ViewData["ReturnUrl"] = returnUrl;
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (!ModelState.IsValid)
+                return View(model);
+
+            string url = "https://localhost:44356/users/Register";
+            RegisterResultModel result;
+
+            var response = await client.PostAsJsonAsync(url, model);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                result = JsonConvert.DeserializeObject<RegisterResultModel>(jsonstring.Result);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server error");
+                return View(model);
+            }
+
+            if (!result.success)
+            {
+                //Can check for specific error codes here if want to handle unqiuely
+                
+                ModelState.AddModelError(string.Empty, result.errormessage);
+                return View(model);
+            }
+
+            return RedirectToAction("login", returnUrl);
         }
 
         [HttpGet]
@@ -100,6 +168,49 @@ namespace Memoraide_WebApp.Controllers
         public IActionResult PleaseLogin()
         {
             return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ViewUser()
+        {
+            string url = "https://localhost:44356/Users/";
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+               
+                List<UserViewModel> uvm = JsonConvert.DeserializeObject<List<UserViewModel>>(jsonstring.Result);
+                return View(uvm);
+            }
+            else
+            {
+                TempData["message"] = "Unable to user card data";
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewUserDecks(int? id)
+        {
+            string url = "https://localhost:44356/Users/Decks/" + id;
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                List<DeckViewModel> decks = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+                return View(decks);
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab Deck data";
+                return NotFound();
+            }
         }
     }
 }

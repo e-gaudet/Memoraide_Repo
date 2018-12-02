@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Memoraide_WebApp.Controllers
 {
@@ -19,9 +20,21 @@ namespace Memoraide_WebApp.Controllers
         {
             client = new HttpClient();
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            string url = "https://localhost:44356/Decks/UserDecks/" + User.FindFirst("UserId").Value;
+
+            var response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                List<DeckViewModel> model = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
+                return View(model);
+            }
+
+            return View(new List<DeckViewModel>());
+
         }
         public IActionResult Create()
         {
@@ -107,11 +120,10 @@ namespace Memoraide_WebApp.Controllers
         //}
 
 
-        //[HttpGet] //This needs to go for routing a post!
         public async Task<IActionResult> ViewDeckDetail(int? id)
         {
 
-            string url = "https://localhost:44356/DEcks/" + id;
+            string url = "https://localhost:44356/Decks/" + id;
 
             var response = await client.GetAsync(url);
 
@@ -223,6 +235,31 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubscribeToDeck(int id, [Bind("ID", "Name", "UserId")] DeckViewModel model)
+        {
+            string url = "https://localhost:44356/Decks/" + User.FindFirst("UserId").Value + ";" + id;
+
+            var response = await client.PostAsync(url, null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["message"] = String.Format("User \"{0}\" Subscribed to deck \"{1}\"", User.FindFirst(ClaimTypes.Name).Value, model.Name);
+
+                return View("ViewDeckDetail", model);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["message"] = "User already subscribed"; //TODO: Make this check bad request properly
+                return View("ViewDeckDetail", model);
+            }
+            else
+            {
+                TempData["message"] = "Issue subscribing to deck";
+                return View("ViewDeckDetail", model);
+            }
+        }
 
     }   
 }

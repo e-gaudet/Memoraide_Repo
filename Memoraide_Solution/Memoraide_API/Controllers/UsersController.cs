@@ -127,22 +127,75 @@ namespace Memoraide_API.Controllers
             return NoContent();
         }
 
+        [HttpGet("Decks/{userId}")]
+        public async Task<IActionResult> GetUserDecks([FromRoute] int userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var decks = _context.Deck.FromSql("SELECT * FROM dbo.Decks WHERE UserId = {0}", userId);
+
+                if (decks != null)
+                    return CreatedAtAction("GetUserDecks", decks);
+                else
+                    return NotFound();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] Login login)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             User user = _context.User.FromSql("EXEC dbo.spGetUserByUsername {0}", login.Username).SingleOrDefaultAsync().Result;
 
             byte[] data = System.Text.Encoding.ASCII.GetBytes(login.Password);
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
             string hashPassword = System.Text.Encoding.ASCII.GetString(data);
 
-            if(hashPassword.Equals(user.Password))
+            if(user != null && hashPassword.Equals(user.Password))
             {
                 return Ok(user);
             }
             else
             {
-                return NotFound();
+                return Unauthorized();
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] Register register)
+        {
+            User user = _context.User.FromSql("EXEC dbo.spGetUserByUsername {0}", register.Username).SingleOrDefaultAsync().Result;
+
+            if (user != null)
+            {
+                return Ok(new RegisterResponse { success = false, errorcode = 1, errormessage = "User Already Exists" });
+            }
+            try
+            {
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(register.Password);
+                data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+                string hashPassword = System.Text.Encoding.ASCII.GetString(data);
+
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddUser {0}, {1}, {2}, {3}, {4}", "", "", register.Username, "", hashPassword);
+
+                return Ok(new RegisterResponse { success = true});
+            }
+            catch
+            {
+                return Ok(new RegisterResponse { success = false, errorcode = -1, errormessage = "Unexpected exception" });
             }
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Memoraide_API.Models;
+using System.Data.SqlClient;
 
 namespace Memoraide_API.Controllers
 {
@@ -121,10 +122,30 @@ namespace Memoraide_API.Controllers
             {
                 return BadRequest(ModelState);
             }
+            try
+            {
+                bool exists;
+                using (SqlConnection connection = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
+                {
+                    SqlCommand command = new SqlCommand(String.Format("select count(*) from dbo.userdecks where userid = {0} and deckid = {1}", userid, deckid), connection);
+                    connection.Open();
+                    exists = (int)command.ExecuteScalar() != 0;
+                }
 
-            await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spSubscribeToDeck {0}, {1}", userid, deckid);
-
-            return NoContent();
+                if (!exists)
+                {
+                    await _context.Database.ExecuteSqlCommandAsync("INSERT INTO dbo.UserDecks (UserId, DeckId) VALUES ({0}, {1})", userid, deckid);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("User Already Subscribed");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Server Error");
+            }
         }
 
         // POST: /Decks/rating/1
@@ -144,6 +165,60 @@ namespace Memoraide_API.Controllers
         private bool DeckExists(int id)
         {
             return _context.Deck.Any(e => e.Id == id);
+        }
+
+        [HttpGet("UserDecks/{userId}")]
+        public async Task<IActionResult> GetUserDecks([FromRoute] int userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                List<Deck> decks = _context.Deck.FromSql("select d.* from dbo.decks d inner join dbo.UserDecks ud on d.id = ud.deckId where ud.userId = {0}", userId).ToList();
+
+                if (decks == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(decks);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("Cards/{deckid}")]
+        public async Task<IActionResult> GetCardsByDeckId([FromRoute] int deckid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var cards = _context.Card.FromSql("SELECT * FROM dbo.Cards WHERE DeckId = {0}", deckid);
+
+            if (cards == null)
+                return NotFound();
+
+            return Ok(cards);
+        }
+
+
+        [HttpDelete("UserDecks/{userid};{deckid}")]
+        public async Task<IActionResult> DeleteUserDeck([FromRoute] int userid, [FromRoute] int deckid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _context.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.UserDecks WHERE UserId = {0} AND DeckId = {1}", userid, deckid);
+
+            return Ok();
         }
     }
 }

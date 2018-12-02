@@ -1,22 +1,28 @@
 ﻿@model List<DeckViewModel>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "View Deck";
+
 }
 
-<h2>Index</h2>
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
 
-@*<a asp-page="./EditReport" asp-route-id="@report.IntegrityReportId" class="btn btn-default"><i class="fa fa-edit"></i></a>*@
 
-<br/>
-
+<h2>View Decks</h2>
 @if (Model.Count() > 0)
 {
-    <h3>My Decks</h3>
     <table class="table">
         <thead>
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model[0].ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].UserId)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model[0].Name)
@@ -31,13 +37,16 @@
                         @Html.DisplayFor(modelDeck => deck.ID)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelDeck => deck.UserId)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelDeck => deck.Name)
                     </td>
                     <!--Links-->
                     <td>
-                        @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
-                        <a asp-action="ViewDeckDetail" asp-route-id="@deck.ID">Details</a> @*|
-                            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                       
+                        @*<a asp-action="ViewUserDeckDetail" asp-route-id="@deck.ID">Details</a>*@
+                            
                     </td>
 
                 </tr>
@@ -45,6 +54,9 @@
         </tbody>
     </table>
 }
-
-<a asp-controller="Deck" asp-action="Create" class="btn btn-default">Create New Deck</a>
-<a asp-controller="Deck" asp-action="ViewDeck" class="btn btn-default">View Decks</a>
+else
+{
+    <div class="alert">
+        ALERT: No decks could be found!
+    </div>
+}
