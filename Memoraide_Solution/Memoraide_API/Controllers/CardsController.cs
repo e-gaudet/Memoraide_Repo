@@ -115,8 +115,8 @@ namespace Memoraide_API.Controllers
         }
 
         // POST: /Cards
-        [HttpPost]
-        public async Task<IActionResult> PostCard([FromBody] Card card)
+        [HttpPost("Create/{CardTags}")]
+        public async Task<IActionResult> PostCard([FromRoute] string CardTags, [FromBody] Card card)
         {
             if (!ModelState.IsValid)
             {
@@ -125,24 +125,37 @@ namespace Memoraide_API.Controllers
 
             await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCard {0}, {1}, {2}", card.DeckId, card.Question, card.Answer);
 
-            return CreatedAtAction("GetCard", new { id = card.Id }, card);
+            var newCard = _context.Card.FromSql("SELECT TOP 1 * FROM dbo.Cards ORDER BY Id DESC;");
+            int id = newCard.ToArray()[0].Id;
+
+            string[] tags = CardTags.Split(',');
+
+            for(int i = 0; i < tags.Length; i++)
+            {
+                tags[i] = tags[i].Trim();
+            }
+
+            foreach (var t in tags)
+                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardTag {0}, {1}", id, t);
+
+            return CreatedAtAction("GetCard", newCard);
         }
 
         //POST: /Cards/1
-        [HttpPost("{cardId}")]
-        public async Task<IActionResult> PostCardTag([FromRoute] int cardId, [FromBody] string tag)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            string[] tags = tag.Split(';');
+        //[HttpPost("{cardId}")]
+        //public async Task<IActionResult> PostCardTag([FromRoute] int cardId, [FromBody] string tag)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    string[] tags = tag.Split(';');
 
-            foreach(var t in tags)
-                await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardTag {0}, {1}", cardId, t);
+        //    foreach(var t in tags)
+        //        await _context.Database.ExecuteSqlCommandAsync("EXEC dbo.spAddCardTag {0}, {1}", cardId, t);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         // DELETE: /Cards/5
         [HttpDelete("{id}")]
