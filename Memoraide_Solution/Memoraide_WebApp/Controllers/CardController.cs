@@ -45,7 +45,7 @@ namespace Memoraide_WebApp.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = "Successfully added " + model.Answer + " to " + "tempdeckname";
+                    TempData["message"] = "Successfully added " + model.Answer + " to " + " deck";
                     url = "https://localhost:44356/Cards/";
                     return RedirectToAction("Create");
                 }

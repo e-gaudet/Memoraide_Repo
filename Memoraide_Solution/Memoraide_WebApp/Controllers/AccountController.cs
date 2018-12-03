@@ -254,5 +254,53 @@ namespace Memoraide_WebApp.Controllers
                 return View("Index");
             }
         }
+
+        public async Task<IActionResult> UserSearch([Bind("SearchTerm")] UserViewModel model)
+        {
+            if (model.SearchTerm != "" && model.SearchTerm != null)
+            {
+                string url = "https://localhost:44356/Users/by_name/" + model.SearchTerm;
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonstring = response.Content.ReadAsStringAsync();
+                    jsonstring.Wait();
+                    List<UserViewModel> lmodel = JsonConvert.DeserializeObject<List<UserViewModel>>(jsonstring.Result);
+                    return View("SearchUser", lmodel);
+                }
+                else
+                {
+                    TempData["message"] = "Unable to grab user data";
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return View(model);
+            }
+
+        }
+
+        public async Task<IActionResult> MyInfo()
+        {
+            var userId = User.FindFirst("UserId").Value;
+            string url = "https://localhost:44356/Users/" + userId;
+
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+                UserViewModel model = JsonConvert.DeserializeObject<UserViewModel>(jsonstring.Result);
+                return View(model);
+            }
+            else
+            {
+                return View("Index");
+            }
+        }
     }
 }

@@ -1,0 +1,26 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Create</h2>
+
+<form asp-controller="Account" asp-action="UserSearch">
+    <div class="form-horizontal">
+        <br />
+
+        <label asp-for="SearchTerm"></label><br />
+        <textarea asp-for="SearchTerm"></textarea><br />
+        <span asp-validation-for="SearchTerm"></span><br />
+        <button type="submit">Search by username</button>
+        <button type="reset" onclick="return confirm('Clear search?');">Clear Search</button>
+        <br />
+    </div>
+</form>

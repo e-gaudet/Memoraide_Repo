@@ -18,5 +18,6 @@ namespace Memoraide_WebApp.Models
         public DateTime? DateBanned { get; set; }
         public Boolean? IsDeleted { get; set; }
         public DateTime? DateDeleted { get; set; }
+        public string SearchTerm { get; set; }
     }
 }

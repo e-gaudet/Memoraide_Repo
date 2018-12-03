@@ -1,0 +1,67 @@
+﻿@model List<UserViewModel>
+@{
+    ViewData["Title"] = "Search";
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Search Results</h2>
+
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Username)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].LastName)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelUser => user.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelUser => user.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelUser => user.LastName)
+                    </td>
+
+                    <!--Links-->
+                    <td>
+                        @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                        <a asp-action="ViewUserDecks" asp-route-id="@user.Id">View Decks</a> @*|
+                            <a asp-action="Delete" asp-route-id="@card.ID">Delete</a>*@
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert">
+        ALERT: No users could be found!
+    </div>
+}
+
+<a asp-action="UserSearch">Back to search</a>
+
+
+
