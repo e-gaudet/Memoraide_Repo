@@ -53,6 +53,24 @@ namespace Memoraide_API.Controllers
             return Ok(user);
         }
 
+        [HttpGet("by_name/{username}")]
+        public async Task<IActionResult> GetUser([FromRoute] string username)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = _context.User.FromSql("EXEC dbo.spGetUserByUsername {0}", username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         // PUT: /Users/user
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
