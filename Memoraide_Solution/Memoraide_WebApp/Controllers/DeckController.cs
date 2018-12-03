@@ -12,6 +12,7 @@ using System.Security.Claims;
 
 namespace Memoraide_WebApp.Controllers
 {
+
     [Authorize]
     public class DeckController : Controller
     {
@@ -146,19 +147,53 @@ namespace Memoraide_WebApp.Controllers
         //todo: non-retarded way of getting all cards in deck.
         public async Task<IActionResult> ReviewDeck(int? deckid)
         {
-            return View();
-            // return View("testing");
 
-            //testing to get to other page.
-            string url = "https://localhost:44356/DEcks/" + deckid;
+            // Cards /{ deckid}
+            string url = "https://localhost:44356/Decks/Cards/" + deckid;
 
             var response = await client.GetAsync(url);
-
             if (response.IsSuccessStatusCode)
             {
                 var jsonstring = response.Content.ReadAsStringAsync();
                 jsonstring.Wait();
-                DeckViewModel model = JsonConvert.DeserializeObject<DeckViewModel>(jsonstring.Result);
+                List<CardViewModel> model = JsonConvert.DeserializeObject<List<CardViewModel>>(jsonstring.Result);
+
+                //viewBag values for doing an initial review / test
+                ViewBag.correctAnswer = 0;
+                ViewBag.incorrectAnswer = 0;
+                ViewBag.cardQuestions = model.Count;
+                List<string> answerList = new List<string>();
+                List<int> cardIdxList = new List<int>();
+
+                foreach(CardViewModel card in model) {
+                    cardIdxList.Add(card.ID);
+                }
+
+                ViewBag.answer_list = answerList;
+                ViewBag.card_idx_list = cardIdxList;
+
+                //pass deck information via viewBag
+                ViewBag.deckName = "";
+                string url2 = "https://localhost:44356/Decks/" + deckid;
+                var response2 = await client.GetAsync(url2);
+                if (response2.IsSuccessStatusCode)
+                {
+                    var jsonstring2 = response2.Content.ReadAsStringAsync();
+                    jsonstring2.Wait();
+                    DeckViewModel deckmodel = JsonConvert.DeserializeObject<DeckViewModel>(jsonstring2.Result);
+
+                    ViewBag.deck_name = deckmodel.Name;
+                       //other meta information passing can go here.
+                }
+                else
+                {
+                    TempData["message"] = "Unable to grab Deck information.";
+                    //return NotFound();
+                }
+
+
+               
+
                 return View(model);
             }
             else
@@ -168,38 +203,14 @@ namespace Memoraide_WebApp.Controllers
             }
 
 
+            return View();
+            // return View("testing");
 
 
             return NotFound();
         }
 
-        //testing: jump to deck detail outside of the deck page.
-        //[HttpGet]
-        //public async Task<IActionResult> ViewDeck_JumpToDetail(int? id)
-        //{
-        //    string url = "https://localhost:44356/Decks/";
 
-        //    var response = await client.GetAsync(url);
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var jsonstring = response.Content.ReadAsStringAsync();
-        //        jsonstring.Wait();
-        //        List<DeckViewModel> model = JsonConvert.DeserializeObject<List<DeckViewModel>>(jsonstring.Result);
-
-        //        if (model[0].Name == null)
-        //        {
-        //            model[0].Name = "test";
-        //        }
-        //        await ViewDeckDetail(id);
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        TempData["message"] = "Unable to grab deck data";
-        //        return NotFound();
-        //    }
-        //}
 
 
         [HttpPost]
@@ -260,6 +271,59 @@ namespace Memoraide_WebApp.Controllers
                 return View("ViewDeckDetail", model);
             }
         }
+
+
+        [HttpGet]
+        public async  Task<JsonResult> CheckAnswer(string userinput, string questionid)
+        {
+            string userinput_raw = userinput;
+            string questionid_raw = questionid;
+
+            string cardAnswer = "";
+
+            //this should work everytime.
+            int card_id;
+            Int32.TryParse(questionid_raw, out card_id);
+
+            ///GET CARD DATA
+            string url = "https://localhost:44356/Cards/" + card_id;
+
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonstring = response.Content.ReadAsStringAsync();
+                jsonstring.Wait();
+
+                CardViewModel model = JsonConvert.DeserializeObject<CardViewModel>(jsonstring.Result);
+
+                cardAnswer = model.Answer;
+                
+            }
+            else
+            {
+                TempData["message"] = "Unable to grab card data";
+                return null;
+            }
+
+            string resultString;
+
+
+            if (cardAnswer.Equals(userinput_raw))
+            {
+                resultString = "User entry is correct!";
+            }
+             else
+            {
+                resultString = "INCORRECT! answer: " + cardAnswer + " User answer: " + userinput_raw;
+            }
+
+
+
+            var jsonblob = new { row = userinput, controllerdata = questionid, result = resultString };
+            return Json(jsonblob);
+        }
+
 
     }   
 }

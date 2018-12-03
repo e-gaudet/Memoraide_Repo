@@ -23,11 +23,12 @@
 }
 
 <script> 
-    $(function () {
-        $('.answer').click(function () {
-            var $answer = $(this);
-        })
-    })
+    //$(function () {
+    //    $('.answer').click(function () {
+    //        var $answer = $(this);
+    //    });
+    //});
+
     function ShowAnswer(div_id) {
         if (!div_id) {
             return false;
@@ -40,6 +41,7 @@
             else {
                 div.style.display = "block";
             }
+
         }
     }
 </script>

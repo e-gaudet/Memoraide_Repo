@@ -1,7 +1,264 @@
-﻿@model DeckViewModel
+﻿@model List<CardViewModel>
 @{
     ViewData["Title"] = "ReviewDeck";
+    //deckName
+    string deckName = ViewBag.deck_name as String;
+
+    //order of cards
+    Random randSeed = new Random();
+    List<int> cardIdList = ViewBag.card_idx_list as List<int>;
+    randomizeOrder(ref cardIdList, randSeed);
+
+    //card score count
+    //List<Tuple<int, string>> incorrectAnswers = new List<Tuple<int, string>>();
+
+
+
+
 }
 
-<h2>ReviewDeck</h2>
 
+@functions {
+public void randomizeOrder(ref List<int> idlist, Random rand)
+{
+    //basic list shuffle
+    int count = idlist.Count;
+    for (int i = 0; i < count; i++)
+    {
+        int swapTo = rand.Next(count);
+        int holder = idlist[swapTo];
+        idlist[swapTo] = idlist[i];
+        idlist[i] = holder;
+    }
+}
+public bool compareAnswer(string answer, string userinput)
+{
+    if (answer.Equals(userinput))
+        return true;
+    return false;
+}
+public void compileWrongAnswers(int cardId, string userInput,
+    ref List<Tuple<int, string>> incorrectAnswers_ref)
+{
+    incorrectAnswers_ref.Add(new Tuple<int, string>(cardId, userInput));
+}
+public void SubmitAnswer(int rowid)
+{
+    //var element = document.
+    int id = rowid; //test
+
+
+}
+}
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('.checkanswer').click(function (event) {
+                    //get id of button: it's the row number.
+                    var btn_id = event.target.id;
+
+                    var btn = event.target;
+                    //id of card.
+                    var cardId = btn.getAttribute('data-card-id');
+
+                    //answer textinput
+                    var textField = document.getElementById(cardId + "_userinput");
+
+                    //textInput data
+                    var userAnswer = textField.value;
+
+
+                    //if userAnswer !== "".....
+
+                    btn.style.display = "none";
+                    textField.style.display = "none";
+
+                    // div.innerText = " please.. " + btn_id + " " + event.target.data("row-number");
+                    $.getJSON('@Url.Action("CheckAnswer")' + '?userinput=' + userAnswer + '&questionid=' + cardId, function (data) {
+                        var div = document.getElementById("test3");
+
+
+                        div.innerText = " Results.. [" + data.controllerdata + "] " + data.result;
+                        // div.value = val(data);
+
+
+                    });
+                    //answer table
+                    var answerTableRow_id = btn_id + "_row_answer";
+                    var answerTableRow = document.getElementById(answerTableRow_id);
+                    //answerTableRow.style.display = "block";
+                    answerTableRow.style.display = "table-row";
+
+                    var answerTableRow_id_user = btn_id + "_row_user_answer";
+                    var answerTableRow_user = document.getElementById(answerTableRow_id_user);
+                    //answerTableRow_user.value = userAnswer;
+                    answerTableRow_user.innerText = userAnswer;
+
+
+                    //not working: revealing the next question. SHOULD work but doesn't, so ripped out for now.
+                    //number nextBtn;
+                    //nextBtn = btn_id + 1;
+
+                    //not working for row....
+
+                    //reveal next card... can't get this on the row or the elements!
+
+                });
+            });
+            //var $answer = $(this);
+        });
+
+    function SubmitAnswer(rowid) {
+        if (!rowid) {
+            return false;
+        }
+        else {
+            var div = document.getElementById(rowid + "_userinput"); //rowid here
+            if (div.style.display !== "none") {
+                div.style.display = "none";
+            }
+            else {
+                div.style.display = "block";
+            }
+
+
+        }
+
+    }
+    </script>
+
+}
+
+
+
+@if (ViewBag.deck_name == "")
+{
+    <h2 id="test">ReviewDeck</h2>
+}
+else
+{
+    <h2 id="test">Reviewing cards for @deckName</h2>
+
+}
+<label id="test3" value="testing!">help</label>
+
+@if (cardIdList.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ID)
+                </th>
+                <th>
+                    Question:
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Answer)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].CardTags)
+                </th>
+            </tr>
+        </thead>
+        @for (int i = 0; i < cardIdList.Count; i++)
+        {
+            @foreach (var card in Model)
+            {
+                if (card.ID == cardIdList[i])
+                {
+                    <tr id="@(i)_row">
+                        <td>
+                            @Html.DisplayFor(modelCard => card.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelCard => card.Question)
+                        </td>
+                        <td>
+                            <textarea id="@(cardIdList[i])_userinput"></textarea>
+                            @*@Html.DisplayFor(modelCard => card.Answer)*@
+                        </td>
+                        <td>
+                            <button class="checkanswer" value="answer submit test_@(cardIdList[i])"
+                                    id="@(i)"
+                                    data-card-id="@card.ID"
+                                    data-row-number="@(i)"
+                                    data-last-row="@(cardIdList.Count)"
+                                    onclick="SubmitAnswer(@(cardIdList[i]))">
+                                submit answer
+                            </button>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelCard => card.CardTags)
+                        </td>
+                        <!--Links-->
+                        <td>
+                            @*<a asp-action="Edit" asp-route-id="@card.ID">Edit</a> |*@
+                        </td>
+
+                    </tr>
+
+
+
+                }
+            }
+
+
+        }
+    </table>
+
+    <h4>- completed questions -</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Card id
+                </th>
+                <th>
+                   Question:
+                </th>
+                <th>
+                    Correct Answer:
+                </th>
+                <th>
+                    Entered Answer:
+                </th>
+            </tr>
+        </thead>
+        @for (int i = 0; i < cardIdList.Count; i++)
+        {
+            @foreach (var card in Model)
+            {
+                if (card.ID == cardIdList[i])
+                    {
+                    //    "display:table-row;
+        <tr id="@(i)_row_answer" style="display:none;">
+            <td>
+                @Html.DisplayFor(modelCard => card.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelCard => card.Question)
+            </td>
+            <td>
+                @Html.DisplayFor(modelCard => card.Answer)
+            </td>
+            <td>
+                <label id="@(i)_row_user_answer" />
+            </td>
+        </tr>
+
+
+
+                }
+            }
+
+
+        }
+    </table>
+
+
+}
+
+@*//List of answers here. populated by final "submit answer" callback, though maybe better for it to ope a new view entirely.*@
