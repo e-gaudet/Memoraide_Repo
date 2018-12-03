@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Memoraide_API.Models;
+using System.Collections.Generic;
 using System;
 
 namespace Memoraide_API.Controllers
@@ -44,7 +45,8 @@ namespace Memoraide_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = _context.User.FromSql("EXEC dbo.spGetUser {0}", id);
+            var user = await _context.User.FromSql("EXEC dbo.spGetUser {0}", id).FirstAsync();
+
             if (user == null)
             {
                 return NotFound();

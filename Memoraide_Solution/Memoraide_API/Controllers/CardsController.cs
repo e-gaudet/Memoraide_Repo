@@ -28,6 +28,7 @@ namespace Memoraide_API.Controllers
             }
 
             var card = _context.Card.FromSql("SELECT * FROM dbo.Cards");
+
             if (card == null)
             {
                 return NotFound();
@@ -46,6 +47,7 @@ namespace Memoraide_API.Controllers
             }
             
             var card = _context.Card.FromSql("EXEC dbo.spGetCard {0}", id).First();
+
             if (card == null)
             {
                 return NotFound();
