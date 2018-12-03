@@ -291,8 +291,6 @@ namespace Memoraide_WebApp.Controllers
             }
         }
 
-<<<<<<< HEAD
-
         [HttpGet]
         public async  Task<JsonResult> CheckAnswer(string userinput, string questionid)
         {
@@ -343,9 +341,7 @@ namespace Memoraide_WebApp.Controllers
             var jsonblob = new { row = userinput, controllerdata = questionid, result = resultString };
             return Json(jsonblob);
         }
-
-
-=======
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UnsubscribeFromDeck(int id, [Bind("ID", "Name", "UserId", "isSubbed")] DeckViewModel model)
@@ -371,7 +367,5 @@ namespace Memoraide_WebApp.Controllers
                 return View("ViewDeckDetail", model);
             }
         }
-
->>>>>>> a3441bcb26b9f4e8cf6511605de86e6c5fdf9473
     }   
 }
